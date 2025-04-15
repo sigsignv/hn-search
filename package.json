@@ -13,5 +13,8 @@
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
-  "scripts": {}
+  "scripts": {},
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
 }
