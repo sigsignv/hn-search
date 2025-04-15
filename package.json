@@ -13,7 +13,9 @@
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
-  "scripts": {},
+  "scripts": {
+    "build": "tsc"
+  },
   "devDependencies": {
     "typescript": "^5.8.3"
   }
