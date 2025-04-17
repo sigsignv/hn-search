@@ -16,7 +16,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "test": "vitest"
+    "test": "vitest",
+    "typecheck": "tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.test.json --noEmit"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
