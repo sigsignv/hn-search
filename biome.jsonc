@@ -2,8 +2,9 @@
 	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
 	"files": {
 		"ignoreUnknown": true,
-		"include": [
-			"**/*.ts"
+		"ignore": [
+			"dist/",
+			"node_modules/"
 		]
 	},
 	"organizeImports": {
@@ -19,5 +20,10 @@
 		"enabled": true,
 		"useEditorconfig": true,
 		"lineWidth": 100
+	},
+	"json": {
+		"formatter": {
+			"enabled": false
+		}
 	}
 }
