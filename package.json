@@ -20,6 +20,9 @@
     "test": "vitest",
     "typecheck": "tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.test.json --noEmit"
   },
+  "dependencies": {
+    "valibot": "^1.0.0"
+  },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "typescript": "^5.8.3",
