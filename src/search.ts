@@ -1,9 +1,9 @@
+import { type HttpClient, fetchClient } from "./client.js";
 import { parse } from "./parse.js";
-import { type Transport, fetchTransport } from "./transport.js";
 
 export type SearchOptions = {
   query: string;
-  transport?: Transport;
+  transport?: HttpClient;
 };
 
 export async function searchByDate(options: SearchOptions) {
@@ -20,9 +20,8 @@ async function search(url: string, options: SearchOptions) {
   const u = new URL(url);
   u.searchParams.set("query", query);
 
-  const transport = options.transport ?? fetchTransport;
-  const response = await transport({
-    url: u,
+  const transport = options.transport ?? fetchClient;
+  const response = await transport(u, {
     headers: {
       "User-Agent": "@sigsign/hn-search",
     },

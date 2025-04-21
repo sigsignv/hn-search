@@ -19,7 +19,8 @@ describe("searchByDate", () => {
   it("calls correct endpoint", async ({ expect }) => {
     searchByDate({
       query: "",
-      transport: async ({ url }) => {
+      transport: async (input) => {
+        const url = new URL(input instanceof Request ? input.url : input);
         expect(url.protocol).toBe("https:");
         expect(url.host).toBe("hn.algolia.com");
         expect(url.pathname).toBe("/api/v1/search_by_date");
@@ -42,7 +43,8 @@ describe("searchByRelevance", () => {
   it("calls correct endpoint", async ({ expect }) => {
     searchByRelevance({
       query: "",
-      transport: async ({ url }) => {
+      transport: async (input) => {
+        const url = new URL(input instanceof Request ? input.url : input);
         expect(url.protocol).toBe("https:");
         expect(url.host).toBe("hn.algolia.com");
         expect(url.pathname).toBe("/api/v1/search");
