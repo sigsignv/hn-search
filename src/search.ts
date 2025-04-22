@@ -3,7 +3,7 @@ import { parse } from "./parse.js";
 
 export type SearchOptions = {
   query: string;
-  transport?: HttpClient;
+  client?: HttpClient;
 };
 
 export async function searchByDate(options: SearchOptions) {
@@ -15,13 +15,12 @@ export async function searchByRelevance(options: SearchOptions) {
 }
 
 async function search(url: string, options: SearchOptions) {
-  const { query } = options;
+  const { query, client = fetchClient } = options;
 
   const u = new URL(url);
   u.searchParams.set("query", query);
 
-  const transport = options.transport ?? fetchClient;
-  const response = await transport(u, {
+  const response = await client(u, {
     headers: {
       "User-Agent": "@sigsign/hn-search",
     },

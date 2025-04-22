@@ -19,7 +19,7 @@ describe("searchByDate", () => {
   it("calls correct endpoint", async ({ expect }) => {
     searchByDate({
       query: "",
-      transport: async (input) => {
+      client: async (input) => {
         const url = new URL(input instanceof Request ? input.url : input);
         expect(url.protocol).toBe("https:");
         expect(url.host).toBe("hn.algolia.com");
@@ -32,7 +32,7 @@ describe("searchByDate", () => {
   it("throws an error when the response is not valid JSON", async ({ expect }) => {
     const task = searchByDate({
       query: "",
-      transport: async () => new Response("invalid JSON response"),
+      client: async () => new Response("invalid JSON response"),
     });
     await expect(task).rejects.toThrowError(SyntaxError);
     await expect(task).rejects.toThrowError(/is not valid JSON$/);
@@ -43,7 +43,7 @@ describe("searchByRelevance", () => {
   it("calls correct endpoint", async ({ expect }) => {
     searchByRelevance({
       query: "",
-      transport: async (input) => {
+      client: async (input) => {
         const url = new URL(input instanceof Request ? input.url : input);
         expect(url.protocol).toBe("https:");
         expect(url.host).toBe("hn.algolia.com");
