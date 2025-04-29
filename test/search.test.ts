@@ -15,12 +15,15 @@ function createMockResponse() {
   );
 }
 
+function createUrl(input: RequestInfo | URL): URL {
+  return new URL(input instanceof Request ? input.url : input);
+}
+
 describe("searchByDate", () => {
   it("calls correct endpoint", async ({ expect }) => {
     searchByDate({
-      query: "",
       client: async (input) => {
-        const url = new URL(input instanceof Request ? input.url : input);
+        const url = createUrl(input);
         expect(url.protocol).toBe("https:");
         expect(url.host).toBe("hn.algolia.com");
         expect(url.pathname).toBe("/api/v1/search_by_date");
@@ -31,7 +34,6 @@ describe("searchByDate", () => {
 
   it("throws an error when the response is not valid JSON", async ({ expect }) => {
     const task = searchByDate({
-      query: "",
       client: async () => new Response("invalid JSON response"),
     });
     await expect(task).rejects.toThrowError(SyntaxError);
@@ -42,9 +44,8 @@ describe("searchByDate", () => {
 describe("searchByRelevance", () => {
   it("calls correct endpoint", async ({ expect }) => {
     searchByRelevance({
-      query: "",
       client: async (input) => {
-        const url = new URL(input instanceof Request ? input.url : input);
+        const url = createUrl(input);
         expect(url.protocol).toBe("https:");
         expect(url.host).toBe("hn.algolia.com");
         expect(url.pathname).toBe("/api/v1/search");

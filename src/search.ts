@@ -2,7 +2,7 @@ import { type HttpClient, fetchClient } from "./client.js";
 import { parse } from "./parse.js";
 
 export type SearchOptions = {
-  query: string;
+  query?: string;
   client?: HttpClient;
 };
 
@@ -18,7 +18,9 @@ async function search(url: string, options: SearchOptions) {
   const { query, client = fetchClient } = options;
 
   const u = new URL(url);
-  u.searchParams.set("query", query);
+  if (query) {
+    u.searchParams.set("query", query);
+  }
 
   const response = await client(u, {
     headers: {
