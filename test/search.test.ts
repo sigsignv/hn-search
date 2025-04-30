@@ -1,5 +1,6 @@
 import { describe, it } from "vitest";
 import { searchByDate, searchByRelevance } from "../src/search.js";
+import { authorTag } from "../src/tag.ts";
 
 function createMockResponse() {
   return new Response(
@@ -46,6 +47,30 @@ describe("searchByDate", () => {
       client: async (input) => {
         const url = createUrl(input);
         expect(url.search).toContain("query=example");
+        return createMockResponse();
+      },
+    });
+  });
+
+  it("Should include the tags parameter in the request URL", async ({ expect }) => {
+    searchByDate({
+      tags: ["story"],
+      client: async (input) => {
+        const url = createUrl(input);
+        expect(url.searchParams.get("tags")).toBe("story");
+        return createMockResponse();
+      },
+    });
+  });
+
+  it("Should include the tags parameter with multiple values in the request URL", async ({
+    expect,
+  }) => {
+    searchByDate({
+      tags: ["story", authorTag("dang")],
+      client: async (input) => {
+        const url = createUrl(input);
+        expect(url.searchParams.get("tags")).toBe("story,author_dang");
         return createMockResponse();
       },
     });

@@ -1,8 +1,10 @@
 import { type HttpClient, fetchClient } from "./client.js";
 import { parse } from "./parse.js";
+import type { HackerNewsTag } from "./tag.js";
 
 export type SearchOptions = {
   query?: string;
+  tags?: HackerNewsTag[];
   client?: HttpClient;
 };
 
@@ -15,11 +17,14 @@ export async function searchByRelevance(options: SearchOptions) {
 }
 
 async function search(url: string, options: SearchOptions) {
-  const { query, client = fetchClient } = options;
+  const { query, tags, client = fetchClient } = options;
 
   const u = new URL(url);
   if (query) {
     u.searchParams.set("query", query);
+  }
+  if (tags) {
+    u.searchParams.set("tags", tags.join(","));
   }
 
   const response = await client(u, {
