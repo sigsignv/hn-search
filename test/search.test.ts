@@ -39,6 +39,17 @@ describe("searchByDate", () => {
     await expect(task).rejects.toThrowError(SyntaxError);
     await expect(task).rejects.toThrowError(/is not valid JSON$/);
   });
+
+  it("Should include the query parameter in the request URL", async ({ expect }) => {
+    searchByDate({
+      query: "example",
+      client: async (input) => {
+        const url = createUrl(input);
+        expect(url.search).toContain("query=example");
+        return createMockResponse();
+      },
+    });
+  });
 });
 
 describe("searchByRelevance", () => {
