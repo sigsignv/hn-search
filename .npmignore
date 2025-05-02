@@ -1,0 +1,8 @@
+.github/
+.vscode/
+test/
+
+.editorconfig
+biome.jsonc
+tsconfig*.json
+vitest.config.ts
