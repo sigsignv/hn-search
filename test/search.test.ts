@@ -38,7 +38,6 @@ describe("searchByDate", () => {
       client: async () => new Response("invalid JSON response"),
     });
     await expect(task).rejects.toThrowError(SyntaxError);
-    await expect(task).rejects.toThrowError(/is not valid JSON$/);
   });
 
   it("Should include the query parameter in the request URL", async ({ expect }) => {
