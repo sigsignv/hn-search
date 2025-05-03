@@ -5,7 +5,7 @@ const IntegerSchema = v.pipe(v.number(), v.integer());
 const MatchedContentSchema = v.object({
   _tags: v.array(v.string()),
   author: v.string(),
-  children: v.array(IntegerSchema),
+  children: v.optional(v.array(IntegerSchema)),
   created_at: v.pipe(v.string(), v.isoTimestamp()),
   num_comments: IntegerSchema,
   points: IntegerSchema,
