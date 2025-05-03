@@ -17,9 +17,11 @@
   "scripts": {
     "prebuild": "rimraf dist/",
     "build": "tsc -p tsconfig.build.json",
+    "check": "npm run check:types",
+    "check:types": "tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.test.json --noEmit",
     "lint": "biome check",
-    "test": "vitest",
-    "typecheck": "tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.test.json --noEmit"
+    "prepack": "npm run build",
+    "test": "vitest"
   },
   "dependencies": {
     "valibot": "^1.0.0"
