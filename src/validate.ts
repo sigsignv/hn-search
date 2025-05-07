@@ -118,16 +118,16 @@ export function validateSearchResult(json: unknown): AlgoliaSearchResult {
     exhaustive: r.exhaustive,
     hits: r.hits.map((hit) => {
       if (isHackerNewsStory(hit)) {
-        return convertHackerNewsStory(hit);
+        return transformHackerNewsStory(hit);
       }
       if (isHackerNewsComment(hit)) {
-        return convertHackerNewsComment(hit);
+        return transformHackerNewsComment(hit);
       }
       if (isHackerNewsPoll(hit)) {
-        return convertHackerNewsPoll(hit);
+        return transformHackerNewsPoll(hit);
       }
       if (isHackerNewsPollOption(hit)) {
-        return convertHackerNewsPollOption(hit);
+        return transformHackerNewsPollOption(hit);
       }
       throw new Error(`Unknown hit type: ${JSON.stringify(hit)}`);
     }),
@@ -150,7 +150,7 @@ type HackerNewsCommentPayload = v.InferOutput<typeof HackerNewsCommentSchema>;
 type HackerNewsPollPayload = v.InferOutput<typeof HackerNewsPollSchema>;
 type HackerNewsPollOptionPayload = v.InferOutput<typeof HackerNewsPollOptionSchema>;
 
-function convertHackerNewsStory(story: HackerNewsStoryPayload): HackerNewsStory {
+function transformHackerNewsStory(story: HackerNewsStoryPayload): HackerNewsStory {
   return {
     ...story,
     kind: "story",
@@ -161,7 +161,7 @@ function convertHackerNewsStory(story: HackerNewsStoryPayload): HackerNewsStory 
   };
 }
 
-function convertHackerNewsComment(comment: HackerNewsCommentPayload): HackerNewsComment {
+function transformHackerNewsComment(comment: HackerNewsCommentPayload): HackerNewsComment {
   const { objectID, ...rest } = comment;
 
   return {
@@ -174,7 +174,7 @@ function convertHackerNewsComment(comment: HackerNewsCommentPayload): HackerNews
   };
 }
 
-function convertHackerNewsPoll(poll: HackerNewsPollPayload): HackerNewsPoll {
+function transformHackerNewsPoll(poll: HackerNewsPollPayload): HackerNewsPoll {
   const { objectID, ...rest } = poll;
 
   return {
@@ -187,7 +187,7 @@ function convertHackerNewsPoll(poll: HackerNewsPollPayload): HackerNewsPoll {
   };
 }
 
-function convertHackerNewsPollOption(pollOpt: HackerNewsPollOptionPayload): HackerNewsPollOption {
+function transformHackerNewsPollOption(pollOpt: HackerNewsPollOptionPayload): HackerNewsPollOption {
   const { objectID, ...rest } = pollOpt;
 
   return {
