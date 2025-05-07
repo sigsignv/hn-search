@@ -23,7 +23,7 @@ export const HackerNewsStorySchema = v.object({
   created_at: TimestampSchema,
   created_at_i: IntegerSchema,
   num_comments: IntegerSchema,
-  objectID: v.string(),
+  objectID: v.string(), // objectID is the same as story_id, but it is not used.
   points: IntegerSchema,
   story_id: IntegerSchema,
   story_text: v.optional(v.string()),
@@ -45,7 +45,7 @@ export const HackerNewsCommentSchema = v.object({
   comment_text: v.string(),
   created_at: TimestampSchema,
   created_at_i: IntegerSchema,
-  objectID: v.string(),
+  objectID: v.pipe(v.string(), v.digits()), // objectID can be used as comment_id.
   parent_id: IntegerSchema,
   points: v.nullable(IntegerSchema),
   story_id: IntegerSchema,

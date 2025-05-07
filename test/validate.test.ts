@@ -218,6 +218,13 @@ describe("HackerNewsCommentSchema", () => {
       expect(result.output.story_url).toBeUndefined();
     }
   });
+
+  it("should reject a comment if 'objectID' is not numeric", ({ expect }) => {
+    const commentWithInvalidObjectID = createComment({ objectID: "invalid" });
+    const result = v.safeParse(HackerNewsCommentSchema, commentWithInvalidObjectID);
+
+    expect(result.success).toBe(false);
+  });
 });
 
 describe("SearchResultSchema", () => {
