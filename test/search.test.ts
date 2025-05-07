@@ -5,6 +5,10 @@ import { authorTag } from "../src/tag.ts";
 function createMockResponse() {
   return new Response(
     JSON.stringify({
+      exhaustive: {
+        nbHits: true,
+        typo: true,
+      },
       hits: [],
       hitsPerPage: 20,
       nbHits: 0,

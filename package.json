@@ -1,6 +1,6 @@
 {
   "name": "@sigsign/hn-search",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A JavaScript client to search Hacker News content using the hn.algolia.com API.",
   "repository": {
     "type": "git",

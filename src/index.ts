@@ -5,4 +5,4 @@ export type { HackerNewsTag } from "./tag.js";
 export { authorTag, storyTag } from "./tag.js";
 
 export * from "./search.js";
-export * from "./parse.js";
+export * from "./types.js";

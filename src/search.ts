@@ -1,7 +1,7 @@
 import { type HttpClient, fetchClient } from "./client.js";
 import { type HackerNewsFilter, buildFilterParam } from "./filter.js";
-import { parse } from "./parse.js";
 import type { HackerNewsTag } from "./tag.js";
+import { validateSearchResult } from "./validate.js";
 
 export type SearchOptions = {
   query?: string;
@@ -43,7 +43,7 @@ async function search(url: string, options: SearchOptions) {
   }
 
   const json = await response.json();
-  const result = parse(json);
+  const result = validateSearchResult(json);
 
   return result;
 }
