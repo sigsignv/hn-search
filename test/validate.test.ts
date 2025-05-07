@@ -647,24 +647,25 @@ describe("validateSearchResult", () => {
     for (const hit of result.hits) {
       if (hit.kind === "story") {
         expectTypeOf(hit).toEqualTypeOf<HackerNewsStory>();
+        expect(hit.id).toBe(12345);
         expect(hit.created_at).toBeInstanceOf(Date);
         expect(hit.updated_at).toBeInstanceOf(Date);
       }
       if (hit.kind === "comment") {
         expectTypeOf(hit).toEqualTypeOf<HackerNewsComment>();
-        expect(hit.comment_id).toBe(123451);
+        expect(hit.id).toBe(123451);
         expect(hit.created_at).toBeInstanceOf(Date);
         expect(hit.updated_at).toBeInstanceOf(Date);
       }
       if (hit.kind === "poll") {
         expectTypeOf(hit).toEqualTypeOf<HackerNewsPoll>();
-        expect(hit.poll_id).toBe(12345);
+        expect(hit.id).toBe(12345);
         expect(hit.created_at).toBeInstanceOf(Date);
         expect(hit.updated_at).toBeInstanceOf(Date);
       }
       if (hit.kind === "pollopt") {
         expectTypeOf(hit).toEqualTypeOf<HackerNewsPollOption>();
-        expect(hit.poll_opt_id).toBe(12345);
+        expect(hit.id).toBe(12345);
         expect(hit.created_at).toBeInstanceOf(Date);
         expect(hit.updated_at).toBeInstanceOf(Date);
       }

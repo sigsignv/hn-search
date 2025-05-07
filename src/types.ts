@@ -21,6 +21,7 @@ export type AlgoliaHighlightResult = {
 
 export type HackerNewsStory = {
   kind: "story";
+  id: number;
   _highlightResult: {
     author: AlgoliaHighlightResult;
     story_text?: AlgoliaHighlightResult | undefined;
@@ -33,7 +34,6 @@ export type HackerNewsStory = {
   created_at: Date;
   num_comments: number;
   points: number;
-  story_id: number;
   story_text?: string | undefined;
   title: string;
   updated_at: Date;
@@ -42,6 +42,7 @@ export type HackerNewsStory = {
 
 export type HackerNewsComment = {
   kind: "comment";
+  id: number;
   _highlightResult: {
     author: AlgoliaHighlightResult;
     comment_text: AlgoliaHighlightResult;
@@ -51,7 +52,6 @@ export type HackerNewsComment = {
   _tags: string[];
   author: string;
   children: number[];
-  comment_id: number;
   comment_text: string;
   created_at: Date;
   parent_id: number;
@@ -64,6 +64,7 @@ export type HackerNewsComment = {
 
 export type HackerNewsPoll = {
   kind: "poll";
+  id: number;
   _highlightResult: {
     author: AlgoliaHighlightResult;
     title: AlgoliaHighlightResult;
@@ -75,13 +76,13 @@ export type HackerNewsPoll = {
   num_comments: number;
   parts: number[];
   points: number;
-  poll_id: number;
   title: string;
   updated_at: Date;
 };
 
 export type HackerNewsPollOption = {
   kind: "pollopt";
+  id: number;
   _highlightResult: {
     author: AlgoliaHighlightResult;
   };
@@ -89,6 +90,5 @@ export type HackerNewsPollOption = {
   author: string;
   created_at: Date;
   points: number;
-  poll_opt_id: number;
   updated_at: Date;
 };

@@ -154,6 +154,7 @@ function convertHackerNewsStory(story: HackerNewsStoryPayload): HackerNewsStory 
   return {
     ...story,
     kind: "story",
+    id: story.story_id,
     children: story.children ?? [],
     created_at: new Date(story.created_at),
     updated_at: new Date(story.updated_at),
@@ -161,33 +162,39 @@ function convertHackerNewsStory(story: HackerNewsStoryPayload): HackerNewsStory 
 }
 
 function convertHackerNewsComment(comment: HackerNewsCommentPayload): HackerNewsComment {
+  const { objectID, ...rest } = comment;
+
   return {
-    ...comment,
+    ...rest,
     kind: "comment",
+    id: Number(objectID),
     children: comment.children ?? [],
-    comment_id: Number(comment.objectID),
     created_at: new Date(comment.created_at),
     updated_at: new Date(comment.updated_at),
   };
 }
 
 function convertHackerNewsPoll(poll: HackerNewsPollPayload): HackerNewsPoll {
+  const { objectID, ...rest } = poll;
+
   return {
-    ...poll,
+    ...rest,
     kind: "poll",
+    id: Number(objectID),
     children: poll.children ?? [],
     created_at: new Date(poll.created_at),
-    poll_id: Number(poll.objectID),
     updated_at: new Date(poll.updated_at),
   };
 }
 
 function convertHackerNewsPollOption(pollOpt: HackerNewsPollOptionPayload): HackerNewsPollOption {
+  const { objectID, ...rest } = pollOpt;
+
   return {
-    ...pollOpt,
+    ...rest,
     kind: "pollopt",
+    id: Number(objectID),
     created_at: new Date(pollOpt.created_at),
-    poll_opt_id: Number(pollOpt.objectID),
     updated_at: new Date(pollOpt.updated_at),
   };
 }
