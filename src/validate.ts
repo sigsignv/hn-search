@@ -3,6 +3,7 @@ import type {
   AlgoliaSearchResult,
   HackerNewsComment,
   HackerNewsPoll,
+  HackerNewsPollOption,
   HackerNewsStory,
 } from "./types.js";
 
@@ -74,6 +75,18 @@ export const HackerNewsPollSchema = v.object({
   updated_at: TimestampSchema,
 });
 
+export const HackerNewsPollOptionSchema = v.object({
+  _highlightResult: v.strictObject({
+    author: HighlightResultSchema,
+  }),
+  _tags: v.array(v.string()),
+  author: v.string(),
+  created_at: TimestampSchema,
+  objectID: v.pipe(v.string(), v.digits()), // objectID can be used as poll_opt_id.
+  points: IntegerSchema,
+  updated_at: TimestampSchema,
+});
+
 /**
  * ref: https://www.algolia.com/doc/api-reference/api-methods/search/
  */
@@ -82,7 +95,14 @@ export const SearchResultSchema = v.object({
     nbHits: v.boolean(),
     typo: v.boolean(),
   }),
-  hits: v.array(v.union([HackerNewsStorySchema, HackerNewsCommentSchema, HackerNewsPollSchema])),
+  hits: v.array(
+    v.union([
+      HackerNewsStorySchema,
+      HackerNewsCommentSchema,
+      HackerNewsPollSchema,
+      HackerNewsPollOptionSchema,
+    ]),
+  ),
   hitsPerPage: IntegerSchema,
   nbHits: IntegerSchema,
   nbPages: IntegerSchema,
@@ -106,6 +126,9 @@ export function validateSearchResult(json: unknown): AlgoliaSearchResult {
       if (isHackerNewsPoll(hit)) {
         return convertHackerNewsPoll(hit);
       }
+      if (isHackerNewsPollOption(hit)) {
+        return convertHackerNewsPollOption(hit);
+      }
       throw new Error(`Unknown hit type: ${JSON.stringify(hit)}`);
     }),
     hitsPerPage: r.hitsPerPage,
@@ -117,10 +140,15 @@ export function validateSearchResult(json: unknown): AlgoliaSearchResult {
   };
 }
 
-type HackerNewsContent = HackerNewsStoryPayload | HackerNewsCommentPayload | HackerNewsPollPayload;
+type HackerNewsContent =
+  | HackerNewsStoryPayload
+  | HackerNewsCommentPayload
+  | HackerNewsPollPayload
+  | HackerNewsPollOptionPayload;
 type HackerNewsStoryPayload = v.InferOutput<typeof HackerNewsStorySchema>;
 type HackerNewsCommentPayload = v.InferOutput<typeof HackerNewsCommentSchema>;
 type HackerNewsPollPayload = v.InferOutput<typeof HackerNewsPollSchema>;
+type HackerNewsPollOptionPayload = v.InferOutput<typeof HackerNewsPollOptionSchema>;
 
 function convertHackerNewsStory(story: HackerNewsStoryPayload): HackerNewsStory {
   return {
@@ -154,6 +182,16 @@ function convertHackerNewsPoll(poll: HackerNewsPollPayload): HackerNewsPoll {
   };
 }
 
+function convertHackerNewsPollOption(pollOpt: HackerNewsPollOptionPayload): HackerNewsPollOption {
+  return {
+    ...pollOpt,
+    kind: "pollopt",
+    created_at: new Date(pollOpt.created_at),
+    poll_opt_id: Number(pollOpt.objectID),
+    updated_at: new Date(pollOpt.updated_at),
+  };
+}
+
 function isHackerNewsStory(json: HackerNewsContent): json is HackerNewsStoryPayload {
   return json._tags.includes("story");
 }
@@ -164,4 +202,8 @@ function isHackerNewsComment(json: HackerNewsContent): json is HackerNewsComment
 
 function isHackerNewsPoll(json: HackerNewsContent): json is HackerNewsPollPayload {
   return json._tags.includes("poll");
+}
+
+function isHackerNewsPollOption(json: HackerNewsContent): json is HackerNewsPollOptionPayload {
+  return json._tags.includes("pollopt");
 }

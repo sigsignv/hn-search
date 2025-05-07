@@ -3,7 +3,7 @@ export type AlgoliaSearchResult = {
     nbHits: boolean;
     typo: boolean;
   };
-  hits: Array<HackerNewsStory | HackerNewsComment | HackerNewsPoll>;
+  hits: Array<HackerNewsStory | HackerNewsComment | HackerNewsPoll | HackerNewsPollOption>;
   hitsPerPage: number;
   nbHits: number;
   nbPages: number;
@@ -77,5 +77,18 @@ export type HackerNewsPoll = {
   points: number;
   poll_id: number;
   title: string;
+  updated_at: Date;
+};
+
+export type HackerNewsPollOption = {
+  kind: "pollopt";
+  _highlightResult: {
+    author: AlgoliaHighlightResult;
+  };
+  _tags: string[];
+  author: string;
+  created_at: Date;
+  points: number;
+  poll_opt_id: number;
   updated_at: Date;
 };

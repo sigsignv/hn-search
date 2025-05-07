@@ -4,10 +4,12 @@ import type {
   AlgoliaHighlightResult,
   HackerNewsComment,
   HackerNewsPoll,
+  HackerNewsPollOption,
   HackerNewsStory,
 } from "../src/types.js";
 import {
   HackerNewsCommentSchema,
+  HackerNewsPollOptionSchema,
   HackerNewsPollSchema,
   HackerNewsStorySchema,
   HighlightResultSchema,
@@ -318,6 +320,49 @@ describe("HackerNewsPollSchema", () => {
   });
 });
 
+describe("HackerNewsPollOptionSchema", () => {
+  const createPollOption = (overrides = {}) => ({
+    _highlightResult: {
+      author: {
+        value: "example_user",
+        matchLevel: "none",
+        matchedWords: [],
+      },
+    },
+    _tags: ["pollopt", "author_example_user"],
+    author: "example_user",
+    created_at: "2023-10-26T10:00:00.000Z",
+    objectID: "12345",
+    points: 10,
+    updated_at: "2023-10-26T11:00:00.000Z",
+    ...overrides,
+  });
+
+  it("should validate a poll option with all fields present", ({ expect }) => {
+    const pollOption = createPollOption();
+    const result = v.safeParse(HackerNewsPollOptionSchema, pollOption);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.output).toEqual(pollOption);
+    }
+  });
+
+  it("should reject a poll option if 'objectID' is not numeric", ({ expect }) => {
+    const pollOptionWithInvalidObjectID = createPollOption({ objectID: "invalid" });
+    const result = v.safeParse(HackerNewsPollOptionSchema, pollOptionWithInvalidObjectID);
+
+    expect(result.success).toBe(false);
+  });
+
+  it("should reject a poll option if 'points' is null", ({ expect }) => {
+    const pollOptionWithNullPoints = createPollOption({ points: null });
+    const result = v.safeParse(HackerNewsPollOptionSchema, pollOptionWithNullPoints);
+
+    expect(result.success).toBe(false);
+  });
+});
+
 describe("SearchResultSchema", () => {
   const createSearchResult = (overrides = {}) => ({
     exhaustive: {
@@ -413,6 +458,21 @@ describe("SearchResultSchema", () => {
         parts: [123456, 123457],
         points: 50,
         title: "Example poll title",
+        updated_at: "2023-10-26T11:00:00.000Z",
+      },
+      {
+        _highlightResult: {
+          author: {
+            value: "example_user",
+            matchLevel: "none",
+            matchedWords: [],
+          },
+        },
+        _tags: ["pollopt", "author_example_user"],
+        author: "example_user",
+        created_at: "2023-10-26T10:00:00.000Z",
+        objectID: "12345",
+        points: 10,
         updated_at: "2023-10-26T11:00:00.000Z",
       },
     ],
@@ -546,6 +606,21 @@ describe("validateSearchResult", () => {
         title: "Example poll title",
         updated_at: "2023-10-26T11:00:00.000Z",
       },
+      {
+        _highlightResult: {
+          author: {
+            value: "example_user",
+            matchLevel: "none",
+            matchedWords: [],
+          },
+        },
+        _tags: ["pollopt", "author_example_user"],
+        author: "example_user",
+        created_at: "2023-10-26T10:00:00.000Z",
+        objectID: "12345",
+        points: 10,
+        updated_at: "2023-10-26T11:00:00.000Z",
+      },
     ],
     hitsPerPage: 20,
     nbHits: 100,
@@ -561,7 +636,7 @@ describe("validateSearchResult", () => {
     const result = validateSearchResult(rawSearchResult);
 
     expect(result.exhaustive).toEqual(rawSearchResult.exhaustive);
-    expect(result.hits).toHaveLength(3);
+    expect(result.hits).toHaveLength(4);
     expect(result.hitsPerPage).toBe(rawSearchResult.hitsPerPage);
     expect(result.nbHits).toBe(rawSearchResult.nbHits);
     expect(result.nbPages).toBe(rawSearchResult.nbPages);
@@ -584,6 +659,12 @@ describe("validateSearchResult", () => {
       if (hit.kind === "poll") {
         expectTypeOf(hit).toEqualTypeOf<HackerNewsPoll>();
         expect(hit.poll_id).toBe(12345);
+        expect(hit.created_at).toBeInstanceOf(Date);
+        expect(hit.updated_at).toBeInstanceOf(Date);
+      }
+      if (hit.kind === "pollopt") {
+        expectTypeOf(hit).toEqualTypeOf<HackerNewsPollOption>();
+        expect(hit.poll_opt_id).toBe(12345);
         expect(hit.created_at).toBeInstanceOf(Date);
         expect(hit.updated_at).toBeInstanceOf(Date);
       }
