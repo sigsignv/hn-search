@@ -49,7 +49,7 @@ export const HackerNewsCommentSchema = v.object({
   children: v.optional(v.array(IntegerSchema)),
   comment_text: v.string(),
   created_at: TimestampSchema,
-  objectID: v.pipe(v.string(), v.digits()), // objectID can be used as comment_id.
+  objectID: v.pipe(v.string(), v.digits()), // objectID can be used as id.
   parent_id: IntegerSchema,
   points: v.nullish(IntegerSchema),
   story_id: IntegerSchema,
@@ -68,7 +68,7 @@ export const HackerNewsPollSchema = v.object({
   children: v.optional(v.array(IntegerSchema)),
   created_at: TimestampSchema,
   num_comments: IntegerSchema,
-  objectID: v.pipe(v.string(), v.digits()), // objectID can be used as poll_id.
+  objectID: v.pipe(v.string(), v.digits()), // objectID can be used as id.
   parts: v.array(IntegerSchema),
   points: IntegerSchema,
   title: v.string(),
@@ -82,7 +82,7 @@ export const HackerNewsPollOptionSchema = v.object({
   _tags: v.array(v.string()),
   author: v.string(),
   created_at: TimestampSchema,
-  objectID: v.pipe(v.string(), v.digits()), // objectID can be used as poll_opt_id.
+  objectID: v.pipe(v.string(), v.digits()), // objectID can be used as id.
   points: IntegerSchema,
   updated_at: TimestampSchema,
 });
