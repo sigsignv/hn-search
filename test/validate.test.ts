@@ -1,8 +1,14 @@
 import * as v from "valibot";
 import { describe, expectTypeOf, it } from "vitest";
-import type { AlgoliaHighlightResult, HackerNewsComment, HackerNewsStory } from "../src/types.js";
+import type {
+  AlgoliaHighlightResult,
+  HackerNewsComment,
+  HackerNewsPoll,
+  HackerNewsStory,
+} from "../src/types.js";
 import {
   HackerNewsCommentSchema,
+  HackerNewsPollSchema,
   HackerNewsStorySchema,
   HighlightResultSchema,
   SearchResultSchema,
@@ -136,6 +142,68 @@ describe("HackerNewsStorySchema", () => {
   it("should reject a story if 'points' is null", ({ expect }) => {
     const storyWithNullPoints = createStory({ points: null });
     const result = v.safeParse(HackerNewsStorySchema, storyWithNullPoints);
+
+    expect(result.success).toBe(false);
+  });
+});
+
+describe("HackerNewsPollSchema", () => {
+  const createPoll = (overrides = {}) => ({
+    _highlightResult: {
+      author: {
+        value: "example_user",
+        matchLevel: "none",
+        matchedWords: [],
+      },
+      title: {
+        value: "Example poll title",
+        matchLevel: "none",
+        matchedWords: [],
+      },
+    },
+    _tags: ["poll", "author_example_user"],
+    author: "example_user",
+    children: [123451, 123452],
+    created_at: "2023-10-26T10:00:00.000Z",
+    num_comments: 10,
+    objectID: "12345",
+    parts: [123456, 123457],
+    points: 50,
+    title: "Example poll title",
+    updated_at: "2023-10-26T11:00:00.000Z",
+    ...overrides,
+  });
+
+  it("should validate a poll with all fields present", ({ expect }) => {
+    const poll = createPoll();
+    const result = v.safeParse(HackerNewsPollSchema, poll);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.output).toEqual(poll);
+    }
+  });
+
+  it("should validate a poll when optional 'children' field is omitted", ({ expect }) => {
+    const { children, ...pollWithoutChildren } = createPoll();
+    const result = v.safeParse(HackerNewsPollSchema, pollWithoutChildren);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.output.children).toBeUndefined();
+    }
+  });
+
+  it("should reject a poll if 'objectID' is not numeric", ({ expect }) => {
+    const pollWithInvalidObjectID = createPoll({ objectID: "invalid" });
+    const result = v.safeParse(HackerNewsPollSchema, pollWithInvalidObjectID);
+
+    expect(result.success).toBe(false);
+  });
+
+  it("should reject a poll if 'points' is null", ({ expect }) => {
+    const pollWithNullPoints = createPoll({ points: null });
+    const result = v.safeParse(HackerNewsPollSchema, pollWithNullPoints);
 
     expect(result.success).toBe(false);
   });
@@ -323,6 +391,30 @@ describe("SearchResultSchema", () => {
         story_url: "https://example.com/story/url",
         updated_at: "2023-10-15T14:00:00.000Z",
       },
+      {
+        _highlightResult: {
+          author: {
+            value: "example_user",
+            matchLevel: "none",
+            matchedWords: [],
+          },
+          title: {
+            value: "Example poll title",
+            matchLevel: "none",
+            matchedWords: [],
+          },
+        },
+        _tags: ["poll", "author_example_user"],
+        author: "example_user",
+        children: [123451, 123452],
+        created_at: "2023-10-26T10:00:00.000Z",
+        num_comments: 10,
+        objectID: "12345",
+        parts: [123456, 123457],
+        points: 50,
+        title: "Example poll title",
+        updated_at: "2023-10-26T11:00:00.000Z",
+      },
     ],
     hitsPerPage: 20,
     nbHits: 100,
@@ -430,6 +522,30 @@ describe("validateSearchResult", () => {
         story_url: "https://example.com/story/url",
         updated_at: "2023-10-15T14:00:00.000Z",
       },
+      {
+        _highlightResult: {
+          author: {
+            value: "example_user",
+            matchLevel: "none",
+            matchedWords: [],
+          },
+          title: {
+            value: "Example poll title",
+            matchLevel: "none",
+            matchedWords: [],
+          },
+        },
+        _tags: ["poll", "author_example_user"],
+        author: "example_user",
+        children: [123451, 123452],
+        created_at: "2023-10-26T10:00:00.000Z",
+        num_comments: 10,
+        objectID: "12345",
+        parts: [123456, 123457],
+        points: 50,
+        title: "Example poll title",
+        updated_at: "2023-10-26T11:00:00.000Z",
+      },
     ],
     hitsPerPage: 20,
     nbHits: 100,
@@ -445,7 +561,7 @@ describe("validateSearchResult", () => {
     const result = validateSearchResult(rawSearchResult);
 
     expect(result.exhaustive).toEqual(rawSearchResult.exhaustive);
-    expect(result.hits).toHaveLength(2);
+    expect(result.hits).toHaveLength(3);
     expect(result.hitsPerPage).toBe(rawSearchResult.hitsPerPage);
     expect(result.nbHits).toBe(rawSearchResult.nbHits);
     expect(result.nbPages).toBe(rawSearchResult.nbPages);
@@ -462,6 +578,12 @@ describe("validateSearchResult", () => {
       if (hit.kind === "comment") {
         expectTypeOf(hit).toEqualTypeOf<HackerNewsComment>();
         expect(hit.comment_id).toBe(123451);
+        expect(hit.created_at).toBeInstanceOf(Date);
+        expect(hit.updated_at).toBeInstanceOf(Date);
+      }
+      if (hit.kind === "poll") {
+        expectTypeOf(hit).toEqualTypeOf<HackerNewsPoll>();
+        expect(hit.poll_id).toBe(12345);
         expect(hit.created_at).toBeInstanceOf(Date);
         expect(hit.updated_at).toBeInstanceOf(Date);
       }
