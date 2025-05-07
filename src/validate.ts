@@ -1,5 +1,5 @@
 import * as v from "valibot";
-import type { AlgoliaSearchResult } from "./types.js";
+import type { AlgoliaSearchResult, HackerNewsComment, HackerNewsStory } from "./types.js";
 
 const IntegerSchema = v.pipe(v.number(), v.integer());
 const TimestampSchema = v.pipe(v.string(), v.isoTimestamp());
@@ -76,7 +76,15 @@ export function validateSearchResult(json: unknown): AlgoliaSearchResult {
 
   return {
     exhaustive: r.exhaustive,
-    hits: [], // todo:
+    hits: r.hits.map((hit) => {
+      if (isHackerNewsStory(hit)) {
+        return convertHackerNewsStory(hit);
+      }
+      if (isHackerNewsComment(hit)) {
+        return convertHackerNewsComment(hit);
+      }
+      throw new Error(`Unknown hit type: ${JSON.stringify(hit)}`);
+    }),
     hitsPerPage: r.hitsPerPage,
     nbHits: r.nbHits,
     nbPages: r.nbPages,
@@ -84,4 +92,37 @@ export function validateSearchResult(json: unknown): AlgoliaSearchResult {
     params: new URLSearchParams(r.params),
     query: r.query,
   };
+}
+
+type HackerNewsContent = HackerNewsStoryPayload | HackerNewsCommentPayload;
+type HackerNewsStoryPayload = v.InferOutput<typeof HackerNewsStorySchema>;
+type HackerNewsCommentPayload = v.InferOutput<typeof HackerNewsCommentSchema>;
+
+function convertHackerNewsStory(story: HackerNewsStoryPayload): HackerNewsStory {
+  return {
+    ...story,
+    kind: "story",
+    children: story.children ?? [],
+    created_at: new Date(story.created_at),
+    updated_at: new Date(story.updated_at),
+  };
+}
+
+function convertHackerNewsComment(comment: HackerNewsCommentPayload): HackerNewsComment {
+  return {
+    ...comment,
+    kind: "comment",
+    children: comment.children ?? [],
+    comment_id: Number(comment.objectID),
+    created_at: new Date(comment.created_at),
+    updated_at: new Date(comment.updated_at),
+  };
+}
+
+function isHackerNewsStory(json: HackerNewsContent): json is HackerNewsStoryPayload {
+  return json._tags.includes("story");
+}
+
+function isHackerNewsComment(json: HackerNewsContent): json is HackerNewsCommentPayload {
+  return json._tags.includes("comment");
 }

@@ -16,7 +16,7 @@ export type AlgoliaHighlightResult = {
   value: string;
   matchLevel: "none" | "partial" | "full";
   matchedWords: string[];
-  fullyHighlighted?: boolean;
+  fullyHighlighted?: boolean | undefined;
 };
 
 export type HackerNewsStory = {
@@ -33,10 +33,10 @@ export type HackerNewsStory = {
   num_comments: number;
   points: number;
   story_id: number;
-  story_text?: string;
+  story_text?: string | undefined;
   title: string;
   updated_at: Date;
-  url?: string;
+  url?: string | undefined;
 };
 
 export type HackerNewsComment = {
@@ -57,6 +57,6 @@ export type HackerNewsComment = {
   points: number | null;
   story_id: number;
   story_title: string;
-  story_url?: string;
+  story_url?: string | undefined;
   updated_at: Date;
 };
