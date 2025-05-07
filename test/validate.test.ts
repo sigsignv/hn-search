@@ -147,68 +147,6 @@ describe("HackerNewsStorySchema", () => {
   });
 });
 
-describe("HackerNewsPollSchema", () => {
-  const createPoll = (overrides = {}) => ({
-    _highlightResult: {
-      author: {
-        value: "example_user",
-        matchLevel: "none",
-        matchedWords: [],
-      },
-      title: {
-        value: "Example poll title",
-        matchLevel: "none",
-        matchedWords: [],
-      },
-    },
-    _tags: ["poll", "author_example_user"],
-    author: "example_user",
-    children: [123451, 123452],
-    created_at: "2023-10-26T10:00:00.000Z",
-    num_comments: 10,
-    objectID: "12345",
-    parts: [123456, 123457],
-    points: 50,
-    title: "Example poll title",
-    updated_at: "2023-10-26T11:00:00.000Z",
-    ...overrides,
-  });
-
-  it("should validate a poll with all fields present", ({ expect }) => {
-    const poll = createPoll();
-    const result = v.safeParse(HackerNewsPollSchema, poll);
-
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(result.output).toEqual(poll);
-    }
-  });
-
-  it("should validate a poll when optional 'children' field is omitted", ({ expect }) => {
-    const { children, ...pollWithoutChildren } = createPoll();
-    const result = v.safeParse(HackerNewsPollSchema, pollWithoutChildren);
-
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(result.output.children).toBeUndefined();
-    }
-  });
-
-  it("should reject a poll if 'objectID' is not numeric", ({ expect }) => {
-    const pollWithInvalidObjectID = createPoll({ objectID: "invalid" });
-    const result = v.safeParse(HackerNewsPollSchema, pollWithInvalidObjectID);
-
-    expect(result.success).toBe(false);
-  });
-
-  it("should reject a poll if 'points' is null", ({ expect }) => {
-    const pollWithNullPoints = createPoll({ points: null });
-    const result = v.safeParse(HackerNewsPollSchema, pollWithNullPoints);
-
-    expect(result.success).toBe(false);
-  });
-});
-
 describe("HackerNewsCommentSchema", () => {
   const createComment = (overrides = {}) => ({
     _highlightResult: {
@@ -313,6 +251,68 @@ describe("HackerNewsCommentSchema", () => {
   it("should reject a comment if 'objectID' is not numeric", ({ expect }) => {
     const commentWithInvalidObjectID = createComment({ objectID: "invalid" });
     const result = v.safeParse(HackerNewsCommentSchema, commentWithInvalidObjectID);
+
+    expect(result.success).toBe(false);
+  });
+});
+
+describe("HackerNewsPollSchema", () => {
+  const createPoll = (overrides = {}) => ({
+    _highlightResult: {
+      author: {
+        value: "example_user",
+        matchLevel: "none",
+        matchedWords: [],
+      },
+      title: {
+        value: "Example poll title",
+        matchLevel: "none",
+        matchedWords: [],
+      },
+    },
+    _tags: ["poll", "author_example_user"],
+    author: "example_user",
+    children: [123451, 123452],
+    created_at: "2023-10-26T10:00:00.000Z",
+    num_comments: 10,
+    objectID: "12345",
+    parts: [123456, 123457],
+    points: 50,
+    title: "Example poll title",
+    updated_at: "2023-10-26T11:00:00.000Z",
+    ...overrides,
+  });
+
+  it("should validate a poll with all fields present", ({ expect }) => {
+    const poll = createPoll();
+    const result = v.safeParse(HackerNewsPollSchema, poll);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.output).toEqual(poll);
+    }
+  });
+
+  it("should validate a poll when optional 'children' field is omitted", ({ expect }) => {
+    const { children, ...pollWithoutChildren } = createPoll();
+    const result = v.safeParse(HackerNewsPollSchema, pollWithoutChildren);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.output.children).toBeUndefined();
+    }
+  });
+
+  it("should reject a poll if 'objectID' is not numeric", ({ expect }) => {
+    const pollWithInvalidObjectID = createPoll({ objectID: "invalid" });
+    const result = v.safeParse(HackerNewsPollSchema, pollWithInvalidObjectID);
+
+    expect(result.success).toBe(false);
+  });
+
+  it("should reject a poll if 'points' is null", ({ expect }) => {
+    const pollWithNullPoints = createPoll({ points: null });
+    const result = v.safeParse(HackerNewsPollSchema, pollWithNullPoints);
 
     expect(result.success).toBe(false);
   });
