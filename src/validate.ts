@@ -10,6 +10,9 @@ import type {
 const IntegerSchema = v.pipe(v.number(), v.integer());
 const TimestampSchema = v.pipe(v.string(), v.isoTimestamp());
 
+/**
+ * @internal
+ */
 export const HighlightResultSchema = v.object({
   value: v.string(),
   matchLevel: v.picklist(["none", "partial", "full"]),
@@ -17,6 +20,9 @@ export const HighlightResultSchema = v.object({
   fullyHighlighted: v.optional(v.boolean()),
 });
 
+/**
+ * @internal
+ */
 export const HackerNewsStorySchema = v.object({
   _highlightResult: v.object({
     author: HighlightResultSchema,
@@ -37,6 +43,9 @@ export const HackerNewsStorySchema = v.object({
   url: v.optional(v.pipe(v.string(), v.url())),
 });
 
+/**
+ * @internal
+ */
 export const HackerNewsCommentSchema = v.object({
   _highlightResult: v.object({
     author: HighlightResultSchema,
@@ -58,6 +67,9 @@ export const HackerNewsCommentSchema = v.object({
   updated_at: TimestampSchema,
 });
 
+/**
+ * @internal
+ */
 export const HackerNewsPollSchema = v.object({
   _highlightResult: v.object({
     author: HighlightResultSchema,
@@ -75,6 +87,9 @@ export const HackerNewsPollSchema = v.object({
   updated_at: TimestampSchema,
 });
 
+/**
+ * @internal
+ */
 export const HackerNewsPollOptionSchema = v.object({
   _highlightResult: v.strictObject({
     author: HighlightResultSchema,
@@ -88,7 +103,8 @@ export const HackerNewsPollOptionSchema = v.object({
 });
 
 /**
- * ref: https://www.algolia.com/doc/api-reference/api-methods/search/
+ * @see: https://www.algolia.com/doc/api-reference/api-methods/search/
+ * @internal
  */
 export const SearchResultSchema = v.object({
   exhaustive: v.object({
