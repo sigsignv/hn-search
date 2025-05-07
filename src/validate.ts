@@ -14,8 +14,9 @@ export const HighlightResultSchema = v.object({
 export const HackerNewsStorySchema = v.object({
   _highlightResult: v.object({
     author: HighlightResultSchema,
+    story_text: v.optional(HighlightResultSchema),
     title: HighlightResultSchema,
-    url: HighlightResultSchema,
+    url: v.optional(HighlightResultSchema),
   }),
   _tags: v.array(v.string()),
   author: v.string(),
@@ -37,7 +38,7 @@ export const HackerNewsCommentSchema = v.object({
     author: HighlightResultSchema,
     comment_text: HighlightResultSchema,
     story_title: HighlightResultSchema,
-    story_url: HighlightResultSchema,
+    story_url: v.optional(HighlightResultSchema),
   }),
   _tags: v.array(v.string()),
   author: v.string(),
@@ -47,10 +48,10 @@ export const HackerNewsCommentSchema = v.object({
   created_at_i: IntegerSchema,
   objectID: v.pipe(v.string(), v.digits()), // objectID can be used as comment_id.
   parent_id: IntegerSchema,
-  points: v.nullable(IntegerSchema),
+  points: v.nullish(IntegerSchema),
   story_id: IntegerSchema,
   story_title: v.string(),
-  story_url: v.optional(v.pipe(v.string(), v.url())),
+  story_url: v.optional(v.string()), // story_url can be an empty string or undefined.
   updated_at: TimestampSchema,
 });
 

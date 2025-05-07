@@ -61,6 +61,11 @@ describe("HackerNewsStorySchema", () => {
         matchLevel: "none",
         matchedWords: [],
       },
+      story_text: {
+        value: "This is the full text of the story.",
+        matchLevel: "none",
+        matchedWords: [],
+      },
       title: {
         value: "Example story title",
         matchLevel: "none",
@@ -198,6 +203,16 @@ describe("HackerNewsCommentSchema", () => {
     }
   });
 
+  it("should accept a comment when 'points' field is omitted", ({ expect }) => {
+    const { points, ...commentWithoutPoints } = createComment();
+    const result = v.safeParse(HackerNewsCommentSchema, commentWithoutPoints);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.output.points).toBeUndefined();
+    }
+  });
+
   it("should validate a comment when optional 'children' field is omitted", ({ expect }) => {
     const { children, ...commentWithoutChildren } = createComment();
     const result = v.safeParse(HackerNewsCommentSchema, commentWithoutChildren);
@@ -217,6 +232,16 @@ describe("HackerNewsCommentSchema", () => {
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.output.story_url).toBeUndefined();
+    }
+  });
+
+  it("should validate a comment when optional 'story_url' field is empty", ({ expect }) => {
+    const commentWithNoStoryUrl = createComment({ story_url: "" });
+    const result = v.safeParse(HackerNewsCommentSchema, commentWithNoStoryUrl);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.output.story_url).toBe("");
     }
   });
 

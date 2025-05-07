@@ -23,8 +23,9 @@ export type HackerNewsStory = {
   kind: "story";
   _highlightResult: {
     author: AlgoliaHighlightResult;
+    story_text?: AlgoliaHighlightResult | undefined;
     title: AlgoliaHighlightResult;
-    url: AlgoliaHighlightResult;
+    url?: AlgoliaHighlightResult | undefined;
   };
   _tags: string[];
   author: string;
@@ -45,7 +46,7 @@ export type HackerNewsComment = {
     author: AlgoliaHighlightResult;
     comment_text: AlgoliaHighlightResult;
     story_title: AlgoliaHighlightResult;
-    story_url: AlgoliaHighlightResult;
+    story_url?: AlgoliaHighlightResult | undefined;
   };
   _tags: string[];
   author: string;
@@ -54,7 +55,7 @@ export type HackerNewsComment = {
   comment_text: string;
   created_at: Date;
   parent_id: number;
-  points: number | null;
+  points?: number | null | undefined;
   story_id: number;
   story_title: string;
   story_url?: string | undefined;
