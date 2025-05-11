@@ -1,9 +1,9 @@
 import * as v from "valibot";
 import type {
-  AlgoliaSearchResult,
   HackerNewsComment,
   HackerNewsPoll,
   HackerNewsPollOption,
+  HackerNewsSearchResult,
   HackerNewsStory,
 } from "./types.js";
 
@@ -127,7 +127,7 @@ export const SearchResultSchema = v.object({
   query: v.string(),
 });
 
-export function validateSearchResult(json: unknown): AlgoliaSearchResult {
+export function validateSearchResult(json: unknown): HackerNewsSearchResult {
   const r = v.parse(SearchResultSchema, json);
 
   return {
