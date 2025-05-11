@@ -97,3 +97,5 @@ export type HackerNewsPollOption = {
   points: number;
   updated_at: Date;
 };
+
+export type HttpClient = typeof fetch;
