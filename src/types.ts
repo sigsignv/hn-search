@@ -98,6 +98,23 @@ export type HackerNewsPollOption = {
   updated_at: Date;
 };
 
+export type HackerNewsJob = {
+  kind: "job";
+  id: number;
+  _highlightResult: {
+    author: AlgoliaHighlightResult;
+    title: AlgoliaHighlightResult;
+    url?: AlgoliaHighlightResult;
+  };
+  _tags: HackerNewsTag[];
+  author: string;
+  created_at: Date;
+  job_text?: string;
+  title: string;
+  updated_at: Date;
+  url?: string;
+};
+
 /**
  * Hacker News tags are used to categorize items on Hacker News.
  *

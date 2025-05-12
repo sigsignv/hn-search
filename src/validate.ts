@@ -126,6 +126,25 @@ export const HackerNewsPollOptionSchema = v.object({
 });
 
 /**
+ * @internal
+ */
+export const HackerNewsJobSchema = v.object({
+  _highlightResult: v.object({
+    author: HighlightResultSchema,
+    title: HighlightResultSchema,
+    url: v.optional(HighlightResultSchema),
+  }),
+  _tags: v.array(HackerNewsTagSchema),
+  author: v.string(),
+  created_at: TimestampSchema,
+  job_text: v.optional(v.string()),
+  objectID: v.pipe(v.string(), v.digits()), // objectID can be used as id.
+  title: v.string(),
+  updated_at: TimestampSchema,
+  url: v.optional(v.pipe(v.string(), v.url())),
+});
+
+/**
  * @see: https://www.algolia.com/doc/api-reference/api-methods/search/
  * @internal
  */
