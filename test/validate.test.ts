@@ -12,6 +12,7 @@ import {
   HackerNewsPollOptionSchema,
   HackerNewsPollSchema,
   HackerNewsStorySchema,
+  HackerNewsTagSchema,
   HighlightResultSchema,
   SearchResultSchema,
   validateSearchResult,
@@ -58,6 +59,48 @@ describe("HighlightResultSchema", () => {
     const result = v.safeParse(HighlightResultSchema, highlight);
 
     expect(result.success).toBe(false);
+  });
+});
+
+describe("HackerNewsTagSchema", () => {
+  it("should accept valid static tags", ({ expect }) => {
+    expect(() => v.parse(HackerNewsTagSchema, "story")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "comment")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "poll")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "pollopt")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "job")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "ask_hn")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "show_hn")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "launch_hn")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "front_page")).not.toThrow();
+  });
+
+  it("should accept valid author tags", ({ expect }) => {
+    // 'dang' is a well-known moderator on Hacker News
+    expect(() => v.parse(HackerNewsTagSchema, "author_dang")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "author_john_doe")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "author_dang-dang-dang")).not.toThrow();
+  });
+
+  it("should reject invalid author tags", ({ expect }) => {
+    expect(() => v.parse(HackerNewsTagSchema, "author_")).toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "author_u")).toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "author_@!?")).toThrow();
+  });
+
+  it("should accept valid story tags", ({ expect }) => {
+    expect(() => v.parse(HackerNewsTagSchema, "story_12345")).not.toThrow();
+  });
+
+  it("should reject invalid story tags", ({ expect }) => {
+    expect(() => v.parse(HackerNewsTagSchema, "story_")).toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "story_abc")).toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "story_-1")).toThrow();
+  });
+
+  it("should reject invalid tags", ({ expect }) => {
+    expect(() => v.parse(HackerNewsTagSchema, "")).toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "invalid tag")).toThrow();
   });
 });
 

@@ -1,14 +1,3 @@
-export type HackerNewsTag =
-  | "story"
-  | "comment"
-  | "poll"
-  | "pollopt"
-  | "show_hn"
-  | "ask_hn"
-  | "front_page"
-  | AuthorTag
-  | StoryTag;
-
 export type AuthorTag = `author_${string}`;
 export type StoryTag = `story_${string}`;
 

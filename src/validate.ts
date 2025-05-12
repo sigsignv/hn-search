@@ -23,6 +23,29 @@ export const HighlightResultSchema = v.object({
 /**
  * @internal
  */
+export const HackerNewsTagSchema = v.union([
+  v.literal("story"),
+  v.literal("comment"),
+  v.literal("poll"),
+  v.literal("pollopt"),
+  v.literal("job"),
+  v.literal("ask_hn"),
+  v.literal("show_hn"),
+  v.literal("launch_hn"),
+  v.literal("front_page"),
+  v.custom<`author_${string}`>(
+    (input) => (typeof input === "string" ? /^author_[a-zA-Z0-9_-]{2,}$/.test(input) : false),
+    "Invalid author tag",
+  ),
+  v.custom<`story_${number}`>(
+    (input) => (typeof input === "string" ? /^story_\d+$/.test(input) : false),
+    "Invalid story tag",
+  ),
+]);
+
+/**
+ * @internal
+ */
 export const HackerNewsStorySchema = v.object({
   _highlightResult: v.object({
     author: HighlightResultSchema,
@@ -30,7 +53,7 @@ export const HackerNewsStorySchema = v.object({
     title: HighlightResultSchema,
     url: v.optional(HighlightResultSchema),
   }),
-  _tags: v.array(v.string()),
+  _tags: v.array(HackerNewsTagSchema),
   author: v.string(),
   children: v.optional(v.array(IntegerSchema)),
   created_at: TimestampSchema,
@@ -53,7 +76,7 @@ export const HackerNewsCommentSchema = v.object({
     story_title: HighlightResultSchema,
     story_url: v.optional(HighlightResultSchema),
   }),
-  _tags: v.array(v.string()),
+  _tags: v.array(HackerNewsTagSchema),
   author: v.string(),
   children: v.optional(v.array(IntegerSchema)),
   comment_text: v.string(),
@@ -75,7 +98,7 @@ export const HackerNewsPollSchema = v.object({
     author: HighlightResultSchema,
     title: HighlightResultSchema,
   }),
-  _tags: v.array(v.string()),
+  _tags: v.array(HackerNewsTagSchema),
   author: v.string(),
   children: v.optional(v.array(IntegerSchema)),
   created_at: TimestampSchema,
@@ -94,7 +117,7 @@ export const HackerNewsPollOptionSchema = v.object({
   _highlightResult: v.strictObject({
     author: HighlightResultSchema,
   }),
-  _tags: v.array(v.string()),
+  _tags: v.array(HackerNewsTagSchema),
   author: v.string(),
   created_at: TimestampSchema,
   objectID: v.pipe(v.string(), v.digits()), // objectID can be used as id.

@@ -33,7 +33,7 @@ export type HackerNewsStory = {
     title: AlgoliaHighlightResult;
     url?: AlgoliaHighlightResult | undefined;
   };
-  _tags: string[];
+  _tags: HackerNewsTag[];
   author: string;
   children: number[];
   created_at: Date;
@@ -54,7 +54,7 @@ export type HackerNewsComment = {
     story_title: AlgoliaHighlightResult;
     story_url?: AlgoliaHighlightResult | undefined;
   };
-  _tags: string[];
+  _tags: HackerNewsTag[];
   author: string;
   children: number[];
   comment_text: string;
@@ -74,7 +74,7 @@ export type HackerNewsPoll = {
     author: AlgoliaHighlightResult;
     title: AlgoliaHighlightResult;
   };
-  _tags: string[];
+  _tags: HackerNewsTag[];
   author: string;
   children: number[];
   created_at: Date;
@@ -91,11 +91,31 @@ export type HackerNewsPollOption = {
   _highlightResult: {
     author: AlgoliaHighlightResult;
   };
-  _tags: string[];
+  _tags: HackerNewsTag[];
   author: string;
   created_at: Date;
   points: number;
   updated_at: Date;
 };
+
+/**
+ * Hacker News tags are used to categorize items on Hacker News.
+ *
+ * Note: "job" and "launch_hn" are not documented in the official API.
+ *
+ * @see https://hn.algolia.com/api
+ */
+export type HackerNewsTag =
+  | "story"
+  | "comment"
+  | "poll"
+  | "pollopt"
+  | "job"
+  | "ask_hn"
+  | "show_hn"
+  | "launch_hn"
+  | "front_page"
+  | `author_${string}`
+  | `story_${number}`;
 
 export type HttpClient = typeof fetch;
