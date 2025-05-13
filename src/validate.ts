@@ -1,6 +1,7 @@
 import * as v from "valibot";
 import type {
   HackerNewsComment,
+  HackerNewsJob,
   HackerNewsPoll,
   HackerNewsPollOption,
   HackerNewsSearchResult,
@@ -159,6 +160,7 @@ export const SearchResultSchema = v.object({
       HackerNewsCommentSchema,
       HackerNewsPollSchema,
       HackerNewsPollOptionSchema,
+      HackerNewsJobSchema,
     ]),
   ),
   hitsPerPage: IntegerSchema,
@@ -187,6 +189,9 @@ export function validateSearchResult(json: unknown): HackerNewsSearchResult {
       if (isHackerNewsPollOption(hit)) {
         return transformHackerNewsPollOption(hit);
       }
+      if (isHackerNewsJob(hit)) {
+        return transformHackerNewsJob(hit);
+      }
       throw new Error(`Unknown hit type: ${JSON.stringify(hit)}`);
     }),
     hitsPerPage: r.hitsPerPage,
@@ -202,11 +207,13 @@ type HackerNewsContent =
   | HackerNewsStoryPayload
   | HackerNewsCommentPayload
   | HackerNewsPollPayload
-  | HackerNewsPollOptionPayload;
+  | HackerNewsPollOptionPayload
+  | HackerNewsJobPayload;
 type HackerNewsStoryPayload = v.InferOutput<typeof HackerNewsStorySchema>;
 type HackerNewsCommentPayload = v.InferOutput<typeof HackerNewsCommentSchema>;
 type HackerNewsPollPayload = v.InferOutput<typeof HackerNewsPollSchema>;
 type HackerNewsPollOptionPayload = v.InferOutput<typeof HackerNewsPollOptionSchema>;
+type HackerNewsJobPayload = v.InferOutput<typeof HackerNewsJobSchema>;
 
 function transformHackerNewsStory(story: HackerNewsStoryPayload): HackerNewsStory {
   return {
@@ -257,6 +264,18 @@ function transformHackerNewsPollOption(pollOpt: HackerNewsPollOptionPayload): Ha
   };
 }
 
+function transformHackerNewsJob(job: HackerNewsJobPayload): HackerNewsJob {
+  const { objectID, ...rest } = job;
+
+  return {
+    ...rest,
+    kind: "job",
+    id: Number(objectID),
+    created_at: new Date(job.created_at),
+    updated_at: new Date(job.updated_at),
+  };
+}
+
 function isHackerNewsStory(json: HackerNewsContent): json is HackerNewsStoryPayload {
   return json._tags.includes("story");
 }
@@ -271,4 +290,8 @@ function isHackerNewsPoll(json: HackerNewsContent): json is HackerNewsPollPayloa
 
 function isHackerNewsPollOption(json: HackerNewsContent): json is HackerNewsPollOptionPayload {
   return json._tags.includes("pollopt");
+}
+
+function isHackerNewsJob(json: HackerNewsContent): json is HackerNewsJobPayload {
+  return json._tags.includes("job");
 }

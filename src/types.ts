@@ -1,14 +1,16 @@
-export type HackerNewsSearchResult = AlgoliaSearchResult;
+export type HackerNewsSearchResult = AlgoliaSearchResult<
+  HackerNewsStory | HackerNewsComment | HackerNewsPoll | HackerNewsPollOption | HackerNewsJob
+>;
 
 /**
  * @see https://www.algolia.com/doc/api-reference/api-methods/search/
  */
-export type AlgoliaSearchResult = {
+export type AlgoliaSearchResult<T> = {
   exhaustive: {
     nbHits: boolean;
     typo: boolean;
   };
-  hits: Array<HackerNewsStory | HackerNewsComment | HackerNewsPoll | HackerNewsPollOption>;
+  hits: Array<T>;
   hitsPerPage: number;
   nbHits: number;
   nbPages: number;
@@ -104,15 +106,15 @@ export type HackerNewsJob = {
   _highlightResult: {
     author: AlgoliaHighlightResult;
     title: AlgoliaHighlightResult;
-    url?: AlgoliaHighlightResult;
+    url?: AlgoliaHighlightResult | undefined;
   };
   _tags: HackerNewsTag[];
   author: string;
   created_at: Date;
-  job_text?: string;
+  job_text?: string | undefined;
   title: string;
   updated_at: Date;
-  url?: string;
+  url?: string | undefined;
 };
 
 /**
