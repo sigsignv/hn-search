@@ -1,6 +1,6 @@
-import { type HttpClient, fetchClient } from "./client.js";
 import { type HackerNewsFilter, buildFilterParam } from "./filter.js";
 import type { HackerNewsTag } from "./tag.js";
+import type { HttpClient } from "./types.js";
 import { validateSearchResult } from "./validate.js";
 
 export type SearchOptions = {
@@ -19,7 +19,7 @@ export async function searchByRelevance(options: SearchOptions) {
 }
 
 async function search(url: string, options: SearchOptions) {
-  const { query, tags, filters, client = fetchClient } = options;
+  const { query, tags, filters, client = fetch } = options;
 
   const u = new URL(url);
   if (query) {
