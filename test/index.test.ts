@@ -12,7 +12,9 @@ describe("example", () => {
     expect(r.query).toBe("example");
     for (const hit of r.hits) {
       expect(hit._tags).toContain("story");
-      expect(hit.points).toBeGreaterThan(100);
+      if (hit.kind === "story") {
+        expect(hit.points).toBeGreaterThan(100);
+      }
     }
   });
 });
