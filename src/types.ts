@@ -26,94 +26,71 @@ export type AlgoliaHighlightResult = {
   fullyHighlighted?: boolean | undefined;
 };
 
-export type HackerNewsStory = {
-  kind: "story";
+type HackerNewsItem<T extends string> = {
+  kind: T;
   id: number;
+  _tags: HackerNewsTag[];
+  created_at: Date;
+  updated_at: Date;
+} & HighlightField<{ author: string }>;
+
+type HighlightField<T extends object> = T & {
   _highlightResult: {
-    author: AlgoliaHighlightResult;
+    [K in keyof T]: AlgoliaHighlightResult;
+  };
+};
+
+export type HackerNewsStory = HackerNewsItem<"story"> & {
+  _highlightResult: {
     story_text?: AlgoliaHighlightResult | undefined;
     title: AlgoliaHighlightResult;
     url?: AlgoliaHighlightResult | undefined;
   };
-  _tags: HackerNewsTag[];
-  author: string;
   children: number[];
-  created_at: Date;
   num_comments: number;
   points: number;
   story_text?: string | undefined;
   title: string;
-  updated_at: Date;
   url?: string | undefined;
 };
 
-export type HackerNewsComment = {
-  kind: "comment";
-  id: number;
+export type HackerNewsComment = HackerNewsItem<"comment"> & {
   _highlightResult: {
-    author: AlgoliaHighlightResult;
     comment_text: AlgoliaHighlightResult;
     story_title: AlgoliaHighlightResult;
     story_url?: AlgoliaHighlightResult | undefined;
   };
-  _tags: HackerNewsTag[];
-  author: string;
   children: number[];
   comment_text: string;
-  created_at: Date;
   parent_id: number;
   points?: number | null | undefined;
   story_id: number;
   story_title: string;
   story_url?: string | undefined;
-  updated_at: Date;
 };
 
-export type HackerNewsPoll = {
-  kind: "poll";
-  id: number;
+export type HackerNewsPoll = HackerNewsItem<"poll"> & {
   _highlightResult: {
-    author: AlgoliaHighlightResult;
     title: AlgoliaHighlightResult;
   };
-  _tags: HackerNewsTag[];
-  author: string;
   children: number[];
-  created_at: Date;
   num_comments: number;
   parts: number[];
   points: number;
   title: string;
-  updated_at: Date;
 };
 
-export type HackerNewsPollOption = {
-  kind: "pollopt";
-  id: number;
-  _highlightResult: {
-    author: AlgoliaHighlightResult;
-  };
-  _tags: HackerNewsTag[];
-  author: string;
-  created_at: Date;
+export type HackerNewsPollOption = HackerNewsItem<"pollopt"> & {
   points: number;
-  updated_at: Date;
 };
 
-export type HackerNewsJob = {
-  kind: "job";
-  id: number;
+export type HackerNewsJob = HackerNewsItem<"job"> & {
   _highlightResult: {
-    author: AlgoliaHighlightResult;
     title: AlgoliaHighlightResult;
     url?: AlgoliaHighlightResult | undefined;
   };
-  _tags: HackerNewsTag[];
-  author: string;
-  created_at: Date;
   job_text?: string | undefined;
   title: string;
-  updated_at: Date;
   url?: string | undefined;
 };
 
