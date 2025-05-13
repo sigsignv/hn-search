@@ -2,7 +2,6 @@ import { type SearchOptions, searchByDate, searchByRelevance } from "./search.js
 import type { HackerNewsSearchResult } from "./types.js";
 
 export type { HackerNewsFilter } from "./filter.js";
-export { authorTag, storyTag } from "./tag.js";
 
 export * from "./search.js";
 

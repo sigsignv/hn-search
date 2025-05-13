@@ -1,6 +1,5 @@
 import { describe, it } from "vitest";
 import { searchByDate, searchByRelevance } from "../src/search.js";
-import { authorTag } from "../src/tag.ts";
 
 function createMockResponse() {
   return new Response(
@@ -70,7 +69,7 @@ describe("searchByDate", () => {
     expect,
   }) => {
     searchByDate({
-      tags: ["story", authorTag("dang")],
+      tags: ["story", "author_dang"],
       client: async (input) => {
         const url = createUrl(input);
         expect(url.searchParams.get("tags")).toBe("story,author_dang");
