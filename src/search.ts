@@ -1,6 +1,5 @@
 import { type HackerNewsFilter, buildFilterParam } from "./filter.js";
-import type { HackerNewsTag } from "./tag.js";
-import type { HttpClient } from "./types.js";
+import type { HackerNewsTag, HttpClient } from "./types.js";
 import { validateSearchResult } from "./validate.js";
 
 export type SearchOptions = {

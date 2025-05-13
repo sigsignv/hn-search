@@ -9,9 +9,11 @@ import type {
 } from "../src/types.js";
 import {
   HackerNewsCommentSchema,
+  HackerNewsJobSchema,
   HackerNewsPollOptionSchema,
   HackerNewsPollSchema,
   HackerNewsStorySchema,
+  HackerNewsTagSchema,
   HighlightResultSchema,
   SearchResultSchema,
   validateSearchResult,
@@ -58,6 +60,48 @@ describe("HighlightResultSchema", () => {
     const result = v.safeParse(HighlightResultSchema, highlight);
 
     expect(result.success).toBe(false);
+  });
+});
+
+describe("HackerNewsTagSchema", () => {
+  it("should accept valid static tags", ({ expect }) => {
+    expect(() => v.parse(HackerNewsTagSchema, "story")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "comment")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "poll")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "pollopt")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "job")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "ask_hn")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "show_hn")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "launch_hn")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "front_page")).not.toThrow();
+  });
+
+  it("should accept valid author tags", ({ expect }) => {
+    // 'dang' is a well-known moderator on Hacker News
+    expect(() => v.parse(HackerNewsTagSchema, "author_dang")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "author_john_doe")).not.toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "author_dang-dang-dang")).not.toThrow();
+  });
+
+  it("should reject invalid author tags", ({ expect }) => {
+    expect(() => v.parse(HackerNewsTagSchema, "author_")).toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "author_u")).toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "author_@!?")).toThrow();
+  });
+
+  it("should accept valid story tags", ({ expect }) => {
+    expect(() => v.parse(HackerNewsTagSchema, "story_12345")).not.toThrow();
+  });
+
+  it("should reject invalid story tags", ({ expect }) => {
+    expect(() => v.parse(HackerNewsTagSchema, "story_")).toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "story_abc")).toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "story_-1")).toThrow();
+  });
+
+  it("should reject invalid tags", ({ expect }) => {
+    expect(() => v.parse(HackerNewsTagSchema, "")).toThrow();
+    expect(() => v.parse(HackerNewsTagSchema, "invalid tag")).toThrow();
   });
 });
 
@@ -358,6 +402,74 @@ describe("HackerNewsPollOptionSchema", () => {
   it("should reject a poll option if 'points' is null", ({ expect }) => {
     const pollOptionWithNullPoints = createPollOption({ points: null });
     const result = v.safeParse(HackerNewsPollOptionSchema, pollOptionWithNullPoints);
+
+    expect(result.success).toBe(false);
+  });
+});
+
+describe("HackerNewsJobSchema", () => {
+  const createJob = (overrides = {}) => ({
+    _highlightResult: {
+      author: {
+        value: "example_user",
+        matchLevel: "none",
+        matchedWords: [],
+      },
+      title: {
+        value: "Example job title",
+        matchLevel: "none",
+        matchedWords: [],
+      },
+      url: {
+        value: "https://example.com/job/url",
+        matchLevel: "none",
+        matchedWords: [],
+      },
+    },
+    _tags: ["job", "author_example_user"],
+    author: "example_user",
+    created_at: "2023-10-26T10:00:00.000Z",
+    job_text: "This is the full text of the job.",
+    objectID: "12345",
+    title: "Example job title",
+    updated_at: "2023-10-26T11:00:00.000Z",
+    url: "https://example.com/job/url",
+    ...overrides,
+  });
+
+  it("should validate a job with all fields present", ({ expect }) => {
+    const job = createJob();
+    const result = v.safeParse(HackerNewsJobSchema, job);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.output).toEqual(job);
+    }
+  });
+
+  it("should validate a job when optional 'job_text' field is omitted", ({ expect }) => {
+    const { job_text, ...jobWithoutJobText } = createJob();
+    const result = v.safeParse(HackerNewsJobSchema, jobWithoutJobText);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.output.job_text).toBeUndefined();
+    }
+  });
+
+  it("should validate a job when optional 'url' field is omitted", ({ expect }) => {
+    const { url, ...jobWithoutUrl } = createJob();
+    const result = v.safeParse(HackerNewsJobSchema, jobWithoutUrl);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.output.url).toBeUndefined();
+    }
+  });
+
+  it("should reject a job if 'objectID' is not numeric", ({ expect }) => {
+    const jobWithInvalidObjectID = createJob({ objectID: "invalid" });
+    const result = v.safeParse(HackerNewsJobSchema, jobWithInvalidObjectID);
 
     expect(result.success).toBe(false);
   });
