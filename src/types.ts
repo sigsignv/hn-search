@@ -1,5 +1,5 @@
 export type HackerNewsSearchResult = AlgoliaSearchResult<
-  HackerNewsStory | HackerNewsComment | HackerNewsPoll | HackerNewsPollOption
+  HackerNewsStory | HackerNewsComment | HackerNewsPoll | HackerNewsPollOption | HackerNewsJob
 >;
 
 /**
@@ -106,15 +106,15 @@ export type HackerNewsJob = {
   _highlightResult: {
     author: AlgoliaHighlightResult;
     title: AlgoliaHighlightResult;
-    url?: AlgoliaHighlightResult;
+    url?: AlgoliaHighlightResult | undefined;
   };
   _tags: HackerNewsTag[];
   author: string;
   created_at: Date;
-  job_text?: string;
+  job_text?: string | undefined;
   title: string;
   updated_at: Date;
-  url?: string;
+  url?: string | undefined;
 };
 
 /**

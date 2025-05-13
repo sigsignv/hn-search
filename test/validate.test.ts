@@ -3,6 +3,7 @@ import { describe, expectTypeOf, it } from "vitest";
 import type {
   AlgoliaHighlightResult,
   HackerNewsComment,
+  HackerNewsJob,
   HackerNewsPoll,
   HackerNewsPollOption,
   HackerNewsStory,
@@ -587,6 +588,33 @@ describe("SearchResultSchema", () => {
         points: 10,
         updated_at: "2023-10-26T11:00:00.000Z",
       },
+      {
+        _highlightResult: {
+          author: {
+            value: "example_user",
+            matchLevel: "none",
+            matchedWords: [],
+          },
+          title: {
+            value: "Example job title",
+            matchLevel: "none",
+            matchedWords: [],
+          },
+          url: {
+            value: "https://example.com/job/url",
+            matchLevel: "none",
+            matchedWords: [],
+          },
+        },
+        _tags: ["job", "author_example_user"],
+        author: "example_user",
+        created_at: "2023-10-26T10:00:00.000Z",
+        job_text: "This is the full text of the job.",
+        objectID: "12345",
+        title: "Example job title",
+        updated_at: "2023-10-26T11:00:00.000Z",
+        url: "https://example.com/job/url",
+      },
     ],
     hitsPerPage: 20,
     nbHits: 100,
@@ -733,6 +761,33 @@ describe("validateSearchResult", () => {
         points: 10,
         updated_at: "2023-10-26T11:00:00.000Z",
       },
+      {
+        _highlightResult: {
+          author: {
+            value: "example_user",
+            matchLevel: "none",
+            matchedWords: [],
+          },
+          title: {
+            value: "Example job title",
+            matchLevel: "none",
+            matchedWords: [],
+          },
+          url: {
+            value: "https://example.com/job/url",
+            matchLevel: "none",
+            matchedWords: [],
+          },
+        },
+        _tags: ["job", "author_example_user"],
+        author: "example_user",
+        created_at: "2023-10-26T10:00:00.000Z",
+        job_text: "This is the full text of the job.",
+        objectID: "12345",
+        title: "Example job title",
+        updated_at: "2023-10-26T11:00:00.000Z",
+        url: "https://example.com/job/url",
+      },
     ],
     hitsPerPage: 20,
     nbHits: 100,
@@ -748,7 +803,7 @@ describe("validateSearchResult", () => {
     const result = validateSearchResult(rawSearchResult);
 
     expect(result.exhaustive).toEqual(rawSearchResult.exhaustive);
-    expect(result.hits).toHaveLength(4);
+    expect(result.hits).toHaveLength(5);
     expect(result.hitsPerPage).toBe(rawSearchResult.hitsPerPage);
     expect(result.nbHits).toBe(rawSearchResult.nbHits);
     expect(result.nbPages).toBe(rawSearchResult.nbPages);
@@ -777,6 +832,12 @@ describe("validateSearchResult", () => {
       }
       if (hit.kind === "pollopt") {
         expectTypeOf(hit).toEqualTypeOf<HackerNewsPollOption>();
+        expect(hit.id).toBe(12345);
+        expect(hit.created_at).toBeInstanceOf(Date);
+        expect(hit.updated_at).toBeInstanceOf(Date);
+      }
+      if (hit.kind === "job") {
+        expectTypeOf(hit).toEqualTypeOf<HackerNewsJob>();
         expect(hit.id).toBe(12345);
         expect(hit.created_at).toBeInstanceOf(Date);
         expect(hit.updated_at).toBeInstanceOf(Date);
