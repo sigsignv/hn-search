@@ -1,14 +1,16 @@
-export type HackerNewsSearchResult = AlgoliaSearchResult;
+export type HackerNewsSearchResult = AlgoliaSearchResult<
+  HackerNewsStory | HackerNewsComment | HackerNewsPoll | HackerNewsPollOption
+>;
 
 /**
  * @see https://www.algolia.com/doc/api-reference/api-methods/search/
  */
-export type AlgoliaSearchResult = {
+export type AlgoliaSearchResult<T> = {
   exhaustive: {
     nbHits: boolean;
     typo: boolean;
   };
-  hits: Array<HackerNewsStory | HackerNewsComment | HackerNewsPoll | HackerNewsPollOption>;
+  hits: Array<T>;
   hitsPerPage: number;
   nbHits: number;
   nbPages: number;
