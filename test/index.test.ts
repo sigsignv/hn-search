@@ -1,11 +1,18 @@
-import { describe, expect, it } from "vitest";
-import { searchByRelevance } from "../src/index.ts";
+import { describe, it } from "vitest";
+import { hnSearch } from "../src/index.ts";
 
-describe("search", () => {
-  it("first test", async () => {
-    const response = await searchByRelevance({
-      query: "test",
+describe("example", () => {
+  it("should run example from README successfully", async ({ expect }) => {
+    const r = await hnSearch({
+      query: "example",
+      tags: ["story"],
+      sort: "date",
+      filters: [{ field: "points", operator: ">", value: 100 }],
     });
-    expect(response).toBeDefined();
+    expect(r.query).toBe("example");
+    for (const hit of r.hits) {
+      expect(hit._tags).toContain("story");
+      expect(hit.points).toBeGreaterThan(100);
+    }
   });
 });

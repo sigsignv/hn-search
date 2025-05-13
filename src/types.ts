@@ -1,3 +1,8 @@
+export type HackerNewsSearchResult = AlgoliaSearchResult;
+
+/**
+ * @see https://www.algolia.com/doc/api-reference/api-methods/search/
+ */
 export type AlgoliaSearchResult = {
   exhaustive: {
     nbHits: boolean;

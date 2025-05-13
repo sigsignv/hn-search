@@ -11,15 +11,16 @@ npm install @sigsign/hn-search
 ## Usage
 
 ```typescript
-import { searchByDate } from "@sigsign/hn-search";
+import { hnSearch } from "@sigsign/hn-search";
 
-const result = await searchByDate({
+const result = await hnSearch({
   query: "example",
   tags: ["story"],
+  sort: "date",
   filters: [
     { field: "points", operator: ">", value: 100 },
   ],
-})
+});
 ```
 
 ## Author
