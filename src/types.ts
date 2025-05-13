@@ -32,16 +32,20 @@ type HackerNewsItem<T extends string> = {
   _tags: HackerNewsTag[];
   created_at: Date;
   updated_at: Date;
+} & HighlightField<{ author: string }>;
+
+type HighlightField<T extends object> = T & {
+  _highlightResult: {
+    [K in keyof T]: AlgoliaHighlightResult;
+  };
 };
 
 export type HackerNewsStory = HackerNewsItem<"story"> & {
   _highlightResult: {
-    author: AlgoliaHighlightResult;
     story_text?: AlgoliaHighlightResult | undefined;
     title: AlgoliaHighlightResult;
     url?: AlgoliaHighlightResult | undefined;
   };
-  author: string;
   children: number[];
   num_comments: number;
   points: number;
@@ -52,12 +56,10 @@ export type HackerNewsStory = HackerNewsItem<"story"> & {
 
 export type HackerNewsComment = HackerNewsItem<"comment"> & {
   _highlightResult: {
-    author: AlgoliaHighlightResult;
     comment_text: AlgoliaHighlightResult;
     story_title: AlgoliaHighlightResult;
     story_url?: AlgoliaHighlightResult | undefined;
   };
-  author: string;
   children: number[];
   comment_text: string;
   parent_id: number;
@@ -69,10 +71,8 @@ export type HackerNewsComment = HackerNewsItem<"comment"> & {
 
 export type HackerNewsPoll = HackerNewsItem<"poll"> & {
   _highlightResult: {
-    author: AlgoliaHighlightResult;
     title: AlgoliaHighlightResult;
   };
-  author: string;
   children: number[];
   num_comments: number;
   parts: number[];
@@ -81,20 +81,14 @@ export type HackerNewsPoll = HackerNewsItem<"poll"> & {
 };
 
 export type HackerNewsPollOption = HackerNewsItem<"pollopt"> & {
-  _highlightResult: {
-    author: AlgoliaHighlightResult;
-  };
-  author: string;
   points: number;
 };
 
 export type HackerNewsJob = HackerNewsItem<"job"> & {
   _highlightResult: {
-    author: AlgoliaHighlightResult;
     title: AlgoliaHighlightResult;
     url?: AlgoliaHighlightResult | undefined;
   };
-  author: string;
   job_text?: string | undefined;
   title: string;
   url?: string | undefined;
