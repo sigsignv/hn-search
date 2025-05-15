@@ -81,8 +81,8 @@ describe("searchByDate", () => {
   it("Should include the filters parameter in the request URL", async ({ expect }) => {
     searchByDate({
       filters: [
-        { field: "created_at_i", operator: "<", value: 1700000000 },
-        { field: "points", operator: ">", value: 100 },
+        ["created_at_i", "<", 1700000000],
+        ["points", ">", 100],
       ],
       client: async (input) => {
         const url = createUrl(input);

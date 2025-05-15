@@ -1,5 +1,5 @@
-import { type HackerNewsFilter, buildFilterParam } from "./filter.js";
-import type { HackerNewsTag, HttpClient } from "./types.js";
+import { buildFilterQueryString } from "./index.js";
+import type { HackerNewsFilter, HackerNewsTag, HttpClient } from "./types.js";
 import { validateSearchResult } from "./validate.js";
 
 export type SearchOptions = {
@@ -28,7 +28,7 @@ async function search(url: string, options: SearchOptions) {
     u.searchParams.set("tags", tags.join(","));
   }
   if (filters) {
-    u.searchParams.set("numericFilters", buildFilterParam(filters));
+    u.searchParams.set("numericFilters", buildFilterQueryString(filters));
   }
 
   const response = await client(u, {

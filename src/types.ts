@@ -114,4 +114,8 @@ export type HackerNewsTag =
   | `author_${string}`
   | `story_${number}`;
 
+export type HackerNewsFilter = [HackerNewsFilterField, HackerNewsFilterOperator, number];
+type HackerNewsFilterField = "created_at_i" | "points" | "num_comments";
+type HackerNewsFilterOperator = "<" | "<=" | "=" | ">" | ">=";
+
 export type HttpClient = typeof fetch;
