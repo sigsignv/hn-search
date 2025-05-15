@@ -11,6 +11,7 @@ export type {
   HackerNewsComment,
   HackerNewsPoll,
   HackerNewsPollOption,
+  HackerNewsJob,
   HackerNewsTag,
 } from "./types.js";
 
