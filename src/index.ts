@@ -1,7 +1,5 @@
 import { type SearchOptions, searchByDate, searchByRelevance } from "./search.js";
-import type { HackerNewsSearchResult } from "./types.js";
-
-export type { HackerNewsFilter } from "./filter.js";
+import type { HackerNewsFilter, HackerNewsSearchResult } from "./types.js";
 
 export * from "./search.js";
 
@@ -13,6 +11,7 @@ export type {
   HackerNewsPollOption,
   HackerNewsJob,
   HackerNewsTag,
+  HackerNewsFilter,
 } from "./types.js";
 
 export type HackerNewsSearchOptions = SearchOptions & {
@@ -30,4 +29,8 @@ export async function hnSearch(options: HackerNewsSearchOptions): Promise<Hacker
     default:
       throw new Error(`Unknown sort: ${sort}`);
   }
+}
+
+export function buildFilterQueryString(filters: HackerNewsFilter[]): string {
+  return filters.map((filter) => filter.join("")).join(",");
 }

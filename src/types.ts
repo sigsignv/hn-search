@@ -114,4 +114,23 @@ export type HackerNewsTag =
   | `author_${string}`
   | `story_${number}`;
 
+/**
+ * Tuple type representing a filter condition for Hacker News search.
+ *
+ * Format: [field, operator, value]
+ *   - field: "created_at_i" | "points" | "num_comments"
+ *     - "created_at_i": Creation time (UNIX timestamp in seconds)
+ *     - "points": Score (number of points)
+ *     - "num_comments": Number of comments
+ *   - operator: "<" | "<=" | "=" | ">" | ">="
+ *   - value: number (the value to compare)
+ *
+ * Example: ["points", ">", 100] searches for items with more than 100 points.
+ *
+ * @see https://hn.algolia.com/api
+ */
+export type HackerNewsFilter = [HackerNewsFilterField, HackerNewsFilterOperator, number];
+type HackerNewsFilterField = "created_at_i" | "points" | "num_comments";
+type HackerNewsFilterOperator = "<" | "<=" | "=" | ">" | ">=";
+
 export type HttpClient = typeof fetch;

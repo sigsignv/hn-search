@@ -18,7 +18,7 @@ const result = await hnSearch({
   tags: ["story"],
   sort: "date",
   filters: [
-    { field: "points", operator: ">", value: 100 },
+    ["points", ">", 100],
   ],
 });
 ```
