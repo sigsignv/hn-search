@@ -1,6 +1,7 @@
-import { describe, it } from "vitest";
-import { type HackerNewsFilter, buildFilterQueryString } from "../src/index.ts";
-import { hnSearch } from "../src/index.ts";
+import { describe, expectTypeOf, it } from "vitest";
+import type { HackerNewsFilter } from "../src/index.ts";
+import { buildFilterQueryString, hnSearch } from "../src/index.ts";
+import type { HttpClient } from "../src/types.ts";
 
 describe("example", () => {
   it("should run example from README successfully", async ({ expect }) => {
@@ -41,5 +42,11 @@ describe("buildFilterQueryString", () => {
     const filters: HackerNewsFilter[] = [];
     const param = buildFilterQueryString(filters);
     expect(param).toBe("");
+  });
+});
+
+describe("HttpClient", () => {
+  it("should be compatible with fetch", () => {
+    expectTypeOf(fetch).toEqualTypeOf<HttpClient>();
   });
 });

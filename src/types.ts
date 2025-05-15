@@ -133,4 +133,4 @@ export type HackerNewsFilter = [HackerNewsFilterField, HackerNewsFilterOperator,
 type HackerNewsFilterField = "created_at_i" | "points" | "num_comments";
 type HackerNewsFilterOperator = "<" | "<=" | "=" | ">" | ">=";
 
-export type HttpClient = typeof fetch;
+export type HttpClient = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
