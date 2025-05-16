@@ -1,4 +1,4 @@
-import { buildFilterQueryString } from "./index.js";
+import { buildFilterQueryString, buildTagQueryString } from "./index.js";
 import type { HackerNewsFilter, HackerNewsTag, HttpClient } from "./types.js";
 import { validateSearchResult } from "./validate.js";
 
@@ -25,7 +25,7 @@ async function search(url: string, options: SearchOptions) {
     u.searchParams.set("query", query);
   }
   if (tags) {
-    u.searchParams.set("tags", tags.join(","));
+    u.searchParams.set("tags", buildTagQueryString(tags));
   }
   if (filters) {
     u.searchParams.set("numericFilters", buildFilterQueryString(filters));

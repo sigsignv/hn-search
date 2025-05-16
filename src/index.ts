@@ -1,5 +1,5 @@
 import { type SearchOptions, searchByDate, searchByRelevance } from "./search.js";
-import type { HackerNewsFilter, HackerNewsSearchResult } from "./types.js";
+import type { HackerNewsFilter, HackerNewsSearchResult, HackerNewsTag } from "./types.js";
 
 export * from "./search.js";
 
@@ -33,4 +33,8 @@ export async function hnSearch(options: HackerNewsSearchOptions): Promise<Hacker
 
 export function buildFilterQueryString(filters: HackerNewsFilter[]): string {
   return filters.map((filter) => filter.join("")).join(",");
+}
+
+export function buildTagQueryString(tags: HackerNewsTag[]): string {
+  return tags.join(",");
 }
