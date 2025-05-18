@@ -1,4 +1,4 @@
-import { buildFilterQueryString, buildTagQueryString } from "./index.js";
+import { buildQueryString } from "./index.js";
 import type { HackerNewsFilter, HackerNewsTag, HttpClient } from "./types.js";
 import { validateSearchResult } from "./validate.js";
 
@@ -18,17 +18,12 @@ export async function searchByRelevance(options: SearchOptions) {
 }
 
 async function search(url: string, options: SearchOptions) {
-  const { query, tags, filters, client = fetch } = options;
+  const { client = fetch, ...parameters } = options;
 
   const u = new URL(url);
-  if (query) {
-    u.searchParams.set("query", query);
-  }
-  if (tags) {
-    u.searchParams.set("tags", buildTagQueryString(tags));
-  }
-  if (filters) {
-    u.searchParams.set("numericFilters", buildFilterQueryString(filters));
+
+  for (const [key, value] of buildQueryString(parameters)) {
+    u.searchParams.set(key, value);
   }
 
   const response = await client(u, {

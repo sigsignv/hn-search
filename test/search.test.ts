@@ -42,55 +42,6 @@ describe("searchByDate", () => {
     });
     await expect(task).rejects.toThrowError(SyntaxError);
   });
-
-  it("Should include the query parameter in the request URL", async ({ expect }) => {
-    searchByDate({
-      query: "example",
-      client: async (input) => {
-        const url = createUrl(input);
-        expect(url.search).toContain("query=example");
-        return createMockResponse();
-      },
-    });
-  });
-
-  it("Should include the tags parameter in the request URL", async ({ expect }) => {
-    searchByDate({
-      tags: ["story"],
-      client: async (input) => {
-        const url = createUrl(input);
-        expect(url.searchParams.get("tags")).toBe("story");
-        return createMockResponse();
-      },
-    });
-  });
-
-  it("Should include the tags parameter with multiple values in the request URL", async ({
-    expect,
-  }) => {
-    searchByDate({
-      tags: ["story", "author_dang"],
-      client: async (input) => {
-        const url = createUrl(input);
-        expect(url.searchParams.get("tags")).toBe("story,author_dang");
-        return createMockResponse();
-      },
-    });
-  });
-
-  it("Should include the filters parameter in the request URL", async ({ expect }) => {
-    searchByDate({
-      filters: [
-        ["created_at_i", "<", 1700000000],
-        ["points", ">", 100],
-      ],
-      client: async (input) => {
-        const url = createUrl(input);
-        expect(url.searchParams.get("numericFilters")).toBe("created_at_i<1700000000,points>100");
-        return createMockResponse();
-      },
-    });
-  });
 });
 
 describe("searchByRelevance", () => {

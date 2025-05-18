@@ -31,6 +31,26 @@ export async function hnSearch(options: HackerNewsSearchOptions): Promise<Hacker
   }
 }
 
+type HackerNewsParameter = Omit<HackerNewsSearchOptions, "sort" | "client">;
+
+export function buildQueryString({ query, tags, filters }: HackerNewsParameter): URLSearchParams {
+  const queryString = new URLSearchParams();
+
+  if (query) {
+    queryString.set("query", query);
+  }
+
+  if (tags && tags.length > 0) {
+    queryString.set("tags", buildTagQueryString(tags));
+  }
+
+  if (filters && filters.length > 0) {
+    queryString.set("numericFilters", buildFilterQueryString(filters));
+  }
+
+  return queryString;
+}
+
 export function buildFilterQueryString(filters: HackerNewsFilter[]): string {
   return filters.map((filter) => filter.join("")).join(",");
 }
