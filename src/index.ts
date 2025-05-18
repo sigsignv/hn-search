@@ -1,5 +1,10 @@
-import { type SearchOptions, searchByDate, searchByRelevance } from "./search.js";
-import type { HackerNewsFilter, HackerNewsSearchResult, HackerNewsTag } from "./types.js";
+import type {
+  HackerNewsFilter,
+  HackerNewsSearchOptions,
+  HackerNewsSearchResult,
+  HackerNewsTag,
+} from "./types.js";
+import { validateSearchResult } from "./validate.js";
 
 export * from "./search.js";
 
@@ -14,18 +19,34 @@ export type {
   HackerNewsFilter,
 } from "./types.js";
 
-export type HackerNewsSearchOptions = SearchOptions & {
-  sort?: "date" | "relevance";
-};
-
 export async function hnSearch(options: HackerNewsSearchOptions): Promise<HackerNewsSearchResult> {
-  const { sort = "relevance", ...rest } = options;
+  const { client = fetch, sort = "relevance", ...parameters } = options;
 
+  const url = new URL(getEndpoint(sort));
+  for (const [key, value] of buildQueryString(parameters)) {
+    url.searchParams.set(key, value);
+  }
+
+  const response = await client(url, {
+    headers: {
+      "User-Agent": "@sigsign/hn-search",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch: ${response.statusText}`);
+  }
+
+  const json = await response.json();
+  return validateSearchResult(json);
+}
+
+function getEndpoint(sort: "date" | "relevance"): string {
   switch (sort) {
     case "date":
-      return searchByDate(rest);
+      return "https://hn.algolia.com/api/v1/search_by_date";
     case "relevance":
-      return searchByRelevance(rest);
+      return "https://hn.algolia.com/api/v1/search";
     default:
       throw new Error(`Unknown sort: ${sort}`);
   }
