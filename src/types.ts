@@ -107,9 +107,22 @@ export type HackerNewsJob = HackerNewsItem<"job"> & {
 };
 
 /**
- * Hacker News tags are used to categorize items on Hacker News.
+ * Tags are used to group items on Hacker News.
  *
- * Note: "job" and "launch_hn" are not documented in the official API.
+ * Possible tags:
+ *   - `story`
+ *   - `comment`
+ *   - `poll`
+ *   - `pollopt`
+ *   - `job`
+ *   - `ask_hn`
+ *   - `show_hn`
+ *   - `launch_hn`
+ *   - `front_page`
+ *   - `author_{username}`: Items by a specific author (e.g., "author_dang")
+ *   - `story_{id}`: Items belonging to a specific story (e.g., "story_12345")
+ *
+ * Note: `job` and `launch_hn` are not listed in the official documentation.
  *
  * @see https://hn.algolia.com/api
  */
