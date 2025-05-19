@@ -127,7 +127,7 @@ export type HackerNewsTag =
   | `story_${number}`;
 
 /**
- * Tuple type representing a filter condition for Hacker News search.
+ * A tuple that describes a filter for Hacker News search.
  *
  * Format: [field, operator, value]
  *   - field: "created_at_i" | "points" | "num_comments"
@@ -135,9 +135,9 @@ export type HackerNewsTag =
  *     - "points": Score (number of points)
  *     - "num_comments": Number of comments
  *   - operator: "<" | "<=" | "=" | ">" | ">="
- *   - value: number (the value to compare)
+ *   - value: number (the number to compare)
  *
- * Example: ["points", ">", 100] searches for items with more than 100 points.
+ * Example: ["points", ">", 100] finds items with more than 100 points.
  *
  * @see https://hn.algolia.com/api
  */
