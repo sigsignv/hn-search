@@ -1,3 +1,15 @@
+export type HackerNewsSearchOptions = {
+  query?: string;
+  tags?: HackerNewsTag[];
+  filters?: HackerNewsFilter[];
+  page?: number;
+  hitsPerPage?: number;
+
+  sort?: "date" | "relevance";
+
+  client?: HttpClient;
+};
+
 export type HackerNewsSearchResult = AlgoliaSearchResult<
   HackerNewsStory | HackerNewsComment | HackerNewsPoll | HackerNewsPollOption | HackerNewsJob
 >;
