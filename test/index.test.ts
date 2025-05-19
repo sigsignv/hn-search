@@ -81,6 +81,15 @@ describe.sequential("real API response validation", () => {
       expect(hit._tags).toContain("job");
     }
   });
+
+  it("should return a result with correct fields when specifying page", async ({ expect }) => {
+    const r = await hnSearch({
+      page: 2,
+      hitsPerPage: 1,
+    });
+    expect(r.page).toBe(2);
+    expect(r.hitsPerPage).toBe(1);
+  });
 });
 
 describe("buildQueryString", () => {
@@ -121,6 +130,14 @@ describe("buildQueryString", () => {
       ],
     });
     expect(params.get("numericFilters")).toBe("points>100,num_comments>=10");
+    expect(params.size).toBe(1);
+  });
+
+  it("should build query string with only page", ({ expect }) => {
+    const params = buildQueryString({
+      page: 2,
+    });
+    expect(params.get("page")).toBe("2");
     expect(params.size).toBe(1);
   });
 

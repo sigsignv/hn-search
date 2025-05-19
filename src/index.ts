@@ -58,6 +58,7 @@ export function buildQueryString({
   query,
   tags,
   filters,
+  page,
   hitsPerPage,
 }: HackerNewsParameter): URLSearchParams {
   const queryString = new URLSearchParams();
@@ -72,6 +73,10 @@ export function buildQueryString({
 
   if (filters && filters.length > 0) {
     queryString.set("numericFilters", buildFilterQueryString(filters));
+  }
+
+  if (typeof page === "number" && Number.isInteger(page)) {
+    queryString.set("page", page.toString());
   }
 
   if (typeof hitsPerPage === "number" && Number.isInteger(hitsPerPage)) {
