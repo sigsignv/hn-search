@@ -54,7 +54,12 @@ function getEndpoint(sort: "date" | "relevance"): string {
 
 type HackerNewsParameter = Omit<HackerNewsSearchOptions, "sort" | "client">;
 
-export function buildQueryString({ query, tags, filters }: HackerNewsParameter): URLSearchParams {
+export function buildQueryString({
+  query,
+  tags,
+  filters,
+  hitsPerPage,
+}: HackerNewsParameter): URLSearchParams {
   const queryString = new URLSearchParams();
 
   if (query) {
@@ -67,6 +72,10 @@ export function buildQueryString({ query, tags, filters }: HackerNewsParameter):
 
   if (filters && filters.length > 0) {
     queryString.set("numericFilters", buildFilterQueryString(filters));
+  }
+
+  if (typeof hitsPerPage === "number" && Number.isInteger(hitsPerPage)) {
+    queryString.set("hitsPerPage", hitsPerPage.toString());
   }
 
   return queryString;

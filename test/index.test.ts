@@ -32,10 +32,12 @@ describe("buildQueryString", () => {
       query: "example",
       tags: ["story", "author_dang"],
       filters: [["points", ">", 100]],
+      hitsPerPage: 10,
     });
     expect(params.get("query")).toBe("example");
     expect(params.get("tags")).toBe("story,author_dang");
     expect(params.get("numericFilters")).toBe("points>100");
+    expect(params.get("hitsPerPage")).toBe("10");
   });
 
   it("should build query string with only query", ({ expect }) => {
@@ -62,6 +64,14 @@ describe("buildQueryString", () => {
       ],
     });
     expect(params.get("numericFilters")).toBe("points>100,num_comments>=10");
+    expect(params.size).toBe(1);
+  });
+
+  it("should build query string with only hitsPerPage", ({ expect }) => {
+    const params = buildQueryString({
+      hitsPerPage: 10,
+    });
+    expect(params.get("hitsPerPage")).toBe("10");
     expect(params.size).toBe(1);
   });
 

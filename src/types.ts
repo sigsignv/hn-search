@@ -2,6 +2,7 @@ export type HackerNewsSearchOptions = {
   query?: string;
   tags?: HackerNewsTag[];
   filters?: HackerNewsFilter[];
+  hitsPerPage?: number;
 
   sort?: "date" | "relevance";
 
