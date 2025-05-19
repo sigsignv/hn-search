@@ -26,6 +26,63 @@ describe("example", () => {
   });
 });
 
+describe.sequential("real API response validation", () => {
+  it("should return a story result with valid fields", async ({ expect }) => {
+    const r = await hnSearch({
+      tags: ["story"],
+      hitsPerPage: 1,
+    });
+    for (const hit of r.hits) {
+      expect(hit.kind).toBe("story");
+      expect(hit._tags).toContain("story");
+    }
+  });
+
+  it("should return a comment result with valid fields", async ({ expect }) => {
+    const r = await hnSearch({
+      tags: ["comment"],
+      hitsPerPage: 1,
+    });
+    for (const hit of r.hits) {
+      expect(hit.kind).toBe("comment");
+      expect(hit._tags).toContain("comment");
+    }
+  });
+
+  it("should return a poll result with valid fields", async ({ expect }) => {
+    const r = await hnSearch({
+      tags: ["poll"],
+      hitsPerPage: 1,
+    });
+    for (const hit of r.hits) {
+      expect(hit.kind).toBe("poll");
+      expect(hit._tags).toContain("poll");
+    }
+  });
+
+  it("should return a poll option result with valid fields", async ({ expect }) => {
+    const r = await hnSearch({
+      tags: ["pollopt"],
+      hitsPerPage: 1,
+    });
+    for (const hit of r.hits) {
+      expect(hit.kind).toBe("pollopt");
+      expect(hit._tags).toContain("pollopt");
+    }
+  });
+
+  it("should return a job result with valid fields", async ({ expect }) => {
+    const r = await hnSearch({
+      tags: ["job"],
+      hitsPerPage: 1,
+    });
+    for (const hit of r.hits) {
+      expect(hit.kind).toBe("job");
+      expect(hit._tags).toContain("job");
+    }
+  });
+});
+
 describe("buildQueryString", () => {
   it("should build query string with all parameters", ({ expect }) => {
     const params = buildQueryString({
