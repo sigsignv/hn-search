@@ -84,19 +84,25 @@ type HackerNewsStoryBase = HackerNewsItem<"story"> &
     points: number;
   };
 
-export type HackerNewsComment = HackerNewsItem<"comment"> & {
-  _highlightResult: {
-    comment_text: AlgoliaHighlightResult;
-    story_title: AlgoliaHighlightResult;
-    story_url?: AlgoliaHighlightResult | undefined;
+/**
+ * Represents a comment item from Hacker News as returned by the Algolia API.
+ *
+ * - If the root item (usually a story) has a `url`, this comment will have `story_url`.
+ * - If not, `story_url` will not be present.
+ */
+export type HackerNewsComment =
+  | Expand<HackerNewsCommentBase>
+  | Expand<HackerNewsCommentBase & HighlightFields<{ story_url: string }>>;
+
+type HackerNewsCommentBase = HackerNewsItem<"comment"> &
+  HighlightFields<{
+    comment_text: string;
+    story_title: string;
+  }> & {
+    children: number[];
+    parent_id: number;
+    story_id: number;
   };
-  children: number[];
-  comment_text: string;
-  parent_id: number;
-  story_id: number;
-  story_title: string;
-  story_url?: string | undefined;
-};
 
 export type HackerNewsPoll = HackerNewsItem<"poll"> & {
   _highlightResult: {
