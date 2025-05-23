@@ -52,19 +52,23 @@ type HighlightFields<T extends object> = T & {
   };
 };
 
-export type HackerNewsStory = HackerNewsItem<"story"> & {
+export type HackerNewsStory = HackerNewsStoryBase & {
   _highlightResult: {
     story_text?: AlgoliaHighlightResult | undefined;
-    title: AlgoliaHighlightResult;
     url?: AlgoliaHighlightResult | undefined;
   };
-  children: number[];
-  num_comments: number;
-  points: number;
   story_text?: string | undefined;
-  title: string;
   url?: string | undefined;
 };
+
+type HackerNewsStoryBase = HackerNewsItem<"story"> &
+  HighlightFields<{
+    title: string;
+  }> & {
+    children: number[];
+    num_comments: number;
+    points: number;
+  };
 
 export type HackerNewsComment = HackerNewsItem<"comment"> & {
   _highlightResult: {
