@@ -52,14 +52,28 @@ type HighlightFields<T extends object> = T & {
   };
 };
 
-export type HackerNewsStory = HackerNewsStoryBase & {
-  _highlightResult: {
-    story_text?: AlgoliaHighlightResult | undefined;
-    url?: AlgoliaHighlightResult | undefined;
-  };
-  story_text?: string | undefined;
-  url?: string | undefined;
-};
+/**
+ * Utility type that expands intersection types for better readability in editors.
+ */
+type Expand<T> = T extends object
+  ? T extends infer O
+    ? { [K in keyof O]: K extends "_highlightResult" ? Expand<O[K]> : O[K] }
+    : never
+  : T;
+
+/**
+ * Represents a story item from Hacker News as returned by the Algolia API.
+ *
+ * - Most stories have a `url`.
+ * - `ask_hn` posts usually have `story_text` instead of `url`.
+ * - Normally, a story has either `url` or `story_text`, not both.
+ * - The type allows both or neither, but you almost never see these cases.
+ */
+export type HackerNewsStory =
+  | Expand<HackerNewsStoryBase>
+  | Expand<HackerNewsStoryBase & HighlightFields<{ story_text: string }>>
+  | Expand<HackerNewsStoryBase & HighlightFields<{ url: string }>>
+  | Expand<HackerNewsStoryBase & HighlightFields<{ story_text: string; url: string }>>;
 
 type HackerNewsStoryBase = HackerNewsItem<"story"> &
   HighlightFields<{
