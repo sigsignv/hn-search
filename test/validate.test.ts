@@ -225,7 +225,6 @@ describe("HackerNewsCommentSchema", () => {
     created_at: "2023-10-15T12:00:00.000Z",
     objectID: "123451",
     parent_id: 12345,
-    points: 1,
     story_id: 12345,
     story_title: "Example story title",
     story_url: "https://example.com/story/url",
@@ -240,26 +239,6 @@ describe("HackerNewsCommentSchema", () => {
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.output).toEqual(comment);
-    }
-  });
-
-  it("should accept a comment when 'points' field is null", ({ expect }) => {
-    const commentWithNullPoints = createComment({ points: null });
-    const result = v.safeParse(HackerNewsCommentSchema, commentWithNullPoints);
-
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(result.output.points).toBeNull();
-    }
-  });
-
-  it("should accept a comment when 'points' field is omitted", ({ expect }) => {
-    const { points, ...commentWithoutPoints } = createComment();
-    const result = v.safeParse(HackerNewsCommentSchema, commentWithoutPoints);
-
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(result.output.points).toBeUndefined();
     }
   });
 
@@ -543,7 +522,6 @@ describe("SearchResultSchema", () => {
         created_at: "2023-10-15T12:00:00.000Z",
         objectID: "123451",
         parent_id: 12345,
-        points: null,
         story_id: 12345,
         story_title: "Example story title",
         story_url: "https://example.com/story/url",
@@ -716,7 +694,6 @@ describe("validateSearchResult", () => {
         created_at_i: 1697371200,
         objectID: "123451",
         parent_id: 12345,
-        points: null,
         story_id: 12345,
         story_title: "Example story title",
         story_url: "https://example.com/story/url",

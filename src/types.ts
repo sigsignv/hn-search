@@ -93,7 +93,6 @@ export type HackerNewsComment = HackerNewsItem<"comment"> & {
   children: number[];
   comment_text: string;
   parent_id: number;
-  points?: number | null | undefined;
   story_id: number;
   story_title: string;
   story_url?: string | undefined;

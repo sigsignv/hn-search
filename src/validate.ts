@@ -84,7 +84,6 @@ export const HackerNewsCommentSchema = v.object({
   created_at: TimestampSchema,
   objectID: v.pipe(v.string(), v.digits()), // objectID can be used as id.
   parent_id: IntegerSchema,
-  points: v.nullish(IntegerSchema),
   story_id: IntegerSchema,
   story_title: v.string(),
   story_url: v.optional(v.string()), // story_url can be an empty string or undefined.
