@@ -44,9 +44,9 @@ type HackerNewsItem<T extends string> = {
   _tags: HackerNewsTag[];
   created_at: Date;
   updated_at: Date;
-} & HighlightField<{ author: string }>;
+} & HighlightFields<{ author: string }>;
 
-type HighlightField<T extends object> = T & {
+type HighlightFields<T extends object> = T & {
   _highlightResult: {
     [K in keyof T]: AlgoliaHighlightResult;
   };
