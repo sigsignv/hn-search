@@ -117,7 +117,12 @@ type HackerNewsPollBase = HackerNewsItem<"poll"> &
     points: number;
   };
 
-export type HackerNewsPollOption = HackerNewsItem<"pollopt"> & {
+/**
+ * Represents a poll option item from Hacker News as returned by the Algolia API.
+ */
+export type HackerNewsPollOption = Expand<HackerNewsPollOptionBase>;
+
+type HackerNewsPollOptionBase = HackerNewsItem<"pollopt"> & {
   points: number;
 };
 
