@@ -104,16 +104,18 @@ type HackerNewsCommentBase = HackerNewsItem<"comment"> &
     story_id: number;
   };
 
-export type HackerNewsPoll = HackerNewsItem<"poll"> & {
-  _highlightResult: {
-    title: AlgoliaHighlightResult;
+/**
+ * Represents a poll item from Hacker News as returned by the Algolia API.
+ */
+export type HackerNewsPoll = Expand<HackerNewsPollBase>;
+
+type HackerNewsPollBase = HackerNewsItem<"poll"> &
+  HighlightFields<{ title: string }> & {
+    children: number[];
+    num_comments: number;
+    parts: number[];
+    points: number;
   };
-  children: number[];
-  num_comments: number;
-  parts: number[];
-  points: number;
-  title: string;
-};
 
 export type HackerNewsPollOption = HackerNewsItem<"pollopt"> & {
   points: number;
