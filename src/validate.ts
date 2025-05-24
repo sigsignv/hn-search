@@ -64,7 +64,7 @@ export const HackerNewsStorySchema = v.object({
   story_text: v.optional(v.string()),
   title: v.string(),
   updated_at: TimestampSchema,
-  url: v.optional(v.pipe(v.string(), v.url())),
+  url: v.optional(v.string()), // url can be an empty string or undefined.
 });
 
 /**
@@ -141,7 +141,7 @@ export const HackerNewsJobSchema = v.object({
   objectID: v.pipe(v.string(), v.digits()), // objectID can be used as id.
   title: v.string(),
   updated_at: TimestampSchema,
-  url: v.optional(v.pipe(v.string(), v.url())),
+  url: v.optional(v.string()), // url can be an empty string or undefined.
 });
 
 /**
