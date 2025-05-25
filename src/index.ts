@@ -1,3 +1,4 @@
+import { buildFilterQueryString } from "./query.js";
 import type {
   HackerNewsFilter,
   HackerNewsSearchOptions,
@@ -84,10 +85,6 @@ export function buildQueryString({
   }
 
   return queryString;
-}
-
-export function buildFilterQueryString(filters: HackerNewsFilter[]): string {
-  return filters.map((filter) => filter.join("")).join(",");
 }
 
 export function buildTagQueryString(tags: HackerNewsTag[]): string {
