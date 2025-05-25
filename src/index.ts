@@ -1,5 +1,5 @@
-import { buildQueryFromFilters } from "./query.js";
-import type { HackerNewsSearchOptions, HackerNewsSearchResult, HackerNewsTag } from "./types.js";
+import { buildQueryFromFilters, buildTagQueryString } from "./query.js";
+import type { HackerNewsSearchOptions, HackerNewsSearchResult } from "./types.js";
 import { validateSearchResult } from "./validate.js";
 
 export * from "./search.js";
@@ -80,8 +80,4 @@ export function buildQueryString({
   }
 
   return queryString;
-}
-
-export function buildTagQueryString(tags: HackerNewsTag[]): string {
-  return tags.join(",");
 }

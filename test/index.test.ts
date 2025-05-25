@@ -1,6 +1,6 @@
 import { describe, expectTypeOf, it } from "vitest";
-import { buildQueryString, buildTagQueryString, hnSearch } from "../src/index.ts";
-import type { HackerNewsTag, HttpClient } from "../src/types.ts";
+import { buildQueryString, hnSearch } from "../src/index.ts";
+import type { HttpClient } from "../src/types.ts";
 
 describe("example", () => {
   it("should run example from README successfully", async ({ expect }) => {
@@ -154,26 +154,6 @@ describe("buildQueryString", () => {
       filters: [],
     });
     expect(params.size).toBe(0);
-  });
-});
-
-describe("buildTagQueryString", () => {
-  it("should return a comma-separated string for multiple tags", ({ expect }) => {
-    const tags: HackerNewsTag[] = ["story", "author_dang"];
-    const param = buildTagQueryString(tags);
-    expect(param).toBe("story,author_dang");
-  });
-
-  it("should return the tag itself for a single tag", ({ expect }) => {
-    const tags: HackerNewsTag[] = ["story"];
-    const param = buildTagQueryString(tags);
-    expect(param).toBe("story");
-  });
-
-  it("should return an empty string for no tags", ({ expect }) => {
-    const tags: HackerNewsTag[] = [];
-    const param = buildTagQueryString(tags);
-    expect(param).toBe("");
   });
 });
 

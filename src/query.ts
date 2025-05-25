@@ -1,5 +1,5 @@
 import * as v from "valibot";
-import type { HackerNewsFilter } from "./types.js";
+import type { HackerNewsFilter, HackerNewsTag } from "./types.js";
 
 const HackerNewsFilterSchema = v.tuple([
   v.picklist(["created_at_i", "points", "num_comments"]),
@@ -19,4 +19,8 @@ export function buildQueryFromFilters(filters: HackerNewsFilter[]): string {
     .map((filter) => v.parse(HackerNewsFilterSchema, filter))
     .map((filter) => filter.join(""))
     .join(",");
+}
+
+export function buildTagQueryString(tags: HackerNewsTag[]): string {
+  return tags.join(",");
 }
