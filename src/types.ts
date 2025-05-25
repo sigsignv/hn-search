@@ -110,7 +110,9 @@ type HackerNewsCommentBase = HackerNewsItem<"comment"> &
 export type HackerNewsPoll = Expand<HackerNewsPollBase>;
 
 type HackerNewsPollBase = HackerNewsItem<"poll"> &
-  HighlightFields<{ title: string }> & {
+  HighlightFields<{
+    title: string;
+  }> & {
     children: number[];
     num_comments: number;
     parts: number[];
@@ -126,15 +128,23 @@ type HackerNewsPollOptionBase = HackerNewsItem<"pollopt"> & {
   points: number;
 };
 
-export type HackerNewsJob = HackerNewsItem<"job"> & {
-  _highlightResult: {
-    title: AlgoliaHighlightResult;
-    url?: AlgoliaHighlightResult | undefined;
+/**
+ * Represents a job item from Hacker News as returned by the Algolia API.
+ *
+ * - Most jobs have a `url`.
+ * - Some jobs have a `job_text` instead of `url`.
+ * - The `job_text` field is not included in `_highlightResult` and may not be searchable.
+ */
+export type HackerNewsJob =
+  | Expand<HackerNewsJobBase>
+  | Expand<HackerNewsJobBase & HighlightFields<{ url: string }>>;
+
+type HackerNewsJobBase = HackerNewsItem<"job"> &
+  HighlightFields<{
+    title: string;
+  }> & {
+    job_text?: string | undefined;
   };
-  job_text?: string | undefined;
-  title: string;
-  url?: string | undefined;
-};
 
 /**
  * Tags are used to group items on Hacker News.
