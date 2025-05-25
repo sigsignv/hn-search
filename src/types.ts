@@ -44,67 +44,107 @@ type HackerNewsItem<T extends string> = {
   _tags: HackerNewsTag[];
   created_at: Date;
   updated_at: Date;
-} & HighlightField<{ author: string }>;
+} & HighlightFields<{ author: string }>;
 
-type HighlightField<T extends object> = T & {
+type HighlightFields<T extends object> = T & {
   _highlightResult: {
     [K in keyof T]: AlgoliaHighlightResult;
   };
 };
 
-export type HackerNewsStory = HackerNewsItem<"story"> & {
-  _highlightResult: {
-    story_text?: AlgoliaHighlightResult | undefined;
-    title: AlgoliaHighlightResult;
-    url?: AlgoliaHighlightResult | undefined;
+/**
+ * Utility type that expands intersection types for better readability in editors.
+ */
+type Expand<T> = T extends object
+  ? T extends infer O
+    ? { [K in keyof O]: K extends "_highlightResult" ? Expand<O[K]> : O[K] }
+    : never
+  : T;
+
+/**
+ * Represents a story item from Hacker News as returned by the Algolia API.
+ *
+ * - Most stories have a `url`.
+ * - `ask_hn` posts usually have `story_text` instead of `url`.
+ * - Normally, a story has either `url` or `story_text`, not both.
+ * - The type allows both or neither, but you almost never see these cases.
+ */
+export type HackerNewsStory =
+  | Expand<HackerNewsStoryBase>
+  | Expand<HackerNewsStoryBase & HighlightFields<{ story_text: string }>>
+  | Expand<HackerNewsStoryBase & HighlightFields<{ url: string }>>
+  | Expand<HackerNewsStoryBase & HighlightFields<{ story_text: string; url: string }>>;
+
+type HackerNewsStoryBase = HackerNewsItem<"story"> &
+  HighlightFields<{
+    title: string;
+  }> & {
+    children: number[];
+    num_comments: number;
+    points: number;
   };
-  children: number[];
-  num_comments: number;
+
+/**
+ * Represents a comment item from Hacker News as returned by the Algolia API.
+ *
+ * - If the root item (usually a story) has a `url`, this comment will have `story_url`.
+ * - If not, `story_url` will not be present.
+ */
+export type HackerNewsComment =
+  | Expand<HackerNewsCommentBase>
+  | Expand<HackerNewsCommentBase & HighlightFields<{ story_url: string }>>;
+
+type HackerNewsCommentBase = HackerNewsItem<"comment"> &
+  HighlightFields<{
+    comment_text: string;
+    story_title: string;
+  }> & {
+    children: number[];
+    parent_id: number;
+    story_id: number;
+  };
+
+/**
+ * Represents a poll item from Hacker News as returned by the Algolia API.
+ */
+export type HackerNewsPoll = Expand<HackerNewsPollBase>;
+
+type HackerNewsPollBase = HackerNewsItem<"poll"> &
+  HighlightFields<{
+    title: string;
+  }> & {
+    children: number[];
+    num_comments: number;
+    parts: number[];
+    points: number;
+  };
+
+/**
+ * Represents a poll option item from Hacker News as returned by the Algolia API.
+ */
+export type HackerNewsPollOption = Expand<HackerNewsPollOptionBase>;
+
+type HackerNewsPollOptionBase = HackerNewsItem<"pollopt"> & {
   points: number;
-  story_text?: string | undefined;
-  title: string;
-  url?: string | undefined;
 };
 
-export type HackerNewsComment = HackerNewsItem<"comment"> & {
-  _highlightResult: {
-    comment_text: AlgoliaHighlightResult;
-    story_title: AlgoliaHighlightResult;
-    story_url?: AlgoliaHighlightResult | undefined;
+/**
+ * Represents a job item from Hacker News as returned by the Algolia API.
+ *
+ * - Most jobs have a `url`.
+ * - Some jobs have a `job_text` instead of `url`.
+ * - The `job_text` field is not included in `_highlightResult` and may not be searchable.
+ */
+export type HackerNewsJob =
+  | Expand<HackerNewsJobBase>
+  | Expand<HackerNewsJobBase & HighlightFields<{ url: string }>>;
+
+type HackerNewsJobBase = HackerNewsItem<"job"> &
+  HighlightFields<{
+    title: string;
+  }> & {
+    job_text?: string | undefined;
   };
-  children: number[];
-  comment_text: string;
-  parent_id: number;
-  points?: number | null | undefined;
-  story_id: number;
-  story_title: string;
-  story_url?: string | undefined;
-};
-
-export type HackerNewsPoll = HackerNewsItem<"poll"> & {
-  _highlightResult: {
-    title: AlgoliaHighlightResult;
-  };
-  children: number[];
-  num_comments: number;
-  parts: number[];
-  points: number;
-  title: string;
-};
-
-export type HackerNewsPollOption = HackerNewsItem<"pollopt"> & {
-  points: number;
-};
-
-export type HackerNewsJob = HackerNewsItem<"job"> & {
-  _highlightResult: {
-    title: AlgoliaHighlightResult;
-    url?: AlgoliaHighlightResult | undefined;
-  };
-  job_text?: string | undefined;
-  title: string;
-  url?: string | undefined;
-};
 
 /**
  * Tags are used to group items on Hacker News.
