@@ -1,6 +1,5 @@
 import { describe, it } from "vitest";
-import { buildQueryFromFilters, buildTagQueryString } from "../src/query.ts";
-import type { HackerNewsTag } from "../src/types.js";
+import { buildQueryFromFilters, buildQueryFromTags } from "../src/query.ts";
 
 describe("buildQueryFromFilters", () => {
   it("should return a query string for multiple filter conditions", async ({ expect }) => {
@@ -38,22 +37,74 @@ describe("buildQueryFromFilters", () => {
   });
 });
 
-describe("buildTagQueryString", () => {
-  it("should return a comma-separated string for multiple tags", ({ expect }) => {
-    const tags: HackerNewsTag[] = ["story", "author_dang"];
-    const param = buildTagQueryString(tags);
-    expect(param).toBe("story,author_dang");
-  });
-
-  it("should return the tag itself for a single tag", ({ expect }) => {
-    const tags: HackerNewsTag[] = ["story"];
-    const param = buildTagQueryString(tags);
-    expect(param).toBe("story");
+describe("buildQueryFromTagas", () => {
+  it("should return a query string for multiple tags", ({ expect }) => {
+    const param = buildQueryFromTags(["story", "author_dang", "story_12345"]);
+    expect(param).toBe("story,author_dang,story_12345");
   });
 
   it("should return an empty string for no tags", ({ expect }) => {
-    const tags: HackerNewsTag[] = [];
-    const param = buildTagQueryString(tags);
+    const param = buildQueryFromTags([]);
     expect(param).toBe("");
+  });
+
+  it("should return a query string for story tag", ({ expect }) => {
+    const param = buildQueryFromTags(["story"]);
+    expect(param).toBe("story");
+  });
+
+  it("should return a query string for comment tag", ({ expect }) => {
+    const param = buildQueryFromTags(["comment"]);
+    expect(param).toBe("comment");
+  });
+
+  it("should return a query string for poll tag", ({ expect }) => {
+    const param = buildQueryFromTags(["poll"]);
+    expect(param).toBe("poll");
+  });
+
+  it("should return a query string for pollopt tag", ({ expect }) => {
+    const param = buildQueryFromTags(["pollopt"]);
+    expect(param).toBe("pollopt");
+  });
+
+  it("should return a query string for job tag", ({ expect }) => {
+    const param = buildQueryFromTags(["job"]);
+    expect(param).toBe("job");
+  });
+
+  it("should return a query string for ask_hn tag", ({ expect }) => {
+    const param = buildQueryFromTags(["ask_hn"]);
+    expect(param).toBe("ask_hn");
+  });
+
+  it("should return a query string for show_hn tag", ({ expect }) => {
+    const param = buildQueryFromTags(["show_hn"]);
+    expect(param).toBe("show_hn");
+  });
+
+  it("should return a query string for launch_hn tag", ({ expect }) => {
+    const param = buildQueryFromTags(["launch_hn"]);
+    expect(param).toBe("launch_hn");
+  });
+
+  it("should return a query string for front_page tag", ({ expect }) => {
+    const param = buildQueryFromTags(["front_page"]);
+    expect(param).toBe("front_page");
+  });
+
+  it("should return a query string for author tag", ({ expect }) => {
+    const param = buildQueryFromTags(["author_dang"]);
+    expect(param).toBe("author_dang");
+  });
+
+  it("should return a query string for story tag with number", ({ expect }) => {
+    const param = buildQueryFromTags(["story_12345"]);
+    expect(param).toBe("story_12345");
+  });
+
+  it("should throw an error for invalid tag format", async ({ expect }) => {
+    // @ts-expect-error: Testing invalid input
+    expect(() => buildQueryFromTags(["invalid_tag"])).toThrow();
   });
 });

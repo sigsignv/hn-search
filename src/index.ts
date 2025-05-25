@@ -1,4 +1,4 @@
-import { buildQueryFromFilters, buildTagQueryString } from "./query.js";
+import { buildQueryFromFilters, buildQueryFromTags } from "./query.js";
 import type { HackerNewsSearchOptions, HackerNewsSearchResult } from "./types.js";
 import { validateSearchResult } from "./validate.js";
 
@@ -64,7 +64,7 @@ export function buildQueryString({
   }
 
   if (tags && tags.length > 0) {
-    queryString.set("tags", buildTagQueryString(tags));
+    queryString.set("tags", buildQueryFromTags(tags));
   }
 
   if (filters && filters.length > 0) {
