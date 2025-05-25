@@ -1,10 +1,5 @@
-import { buildFilterQueryString } from "./query.js";
-import type {
-  HackerNewsFilter,
-  HackerNewsSearchOptions,
-  HackerNewsSearchResult,
-  HackerNewsTag,
-} from "./types.js";
+import { buildQueryFromFilters } from "./query.js";
+import type { HackerNewsSearchOptions, HackerNewsSearchResult, HackerNewsTag } from "./types.js";
 import { validateSearchResult } from "./validate.js";
 
 export * from "./search.js";
@@ -73,7 +68,7 @@ export function buildQueryString({
   }
 
   if (filters && filters.length > 0) {
-    queryString.set("numericFilters", buildFilterQueryString(filters));
+    queryString.set("numericFilters", buildQueryFromFilters(filters));
   }
 
   if (typeof page === "number" && Number.isInteger(page)) {
