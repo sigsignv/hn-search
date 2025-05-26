@@ -1,9 +1,5 @@
-import type {
-  HackerNewsFilter,
-  HackerNewsSearchOptions,
-  HackerNewsSearchResult,
-  HackerNewsTag,
-} from "./types.js";
+import { buildQueryString } from "./query.js";
+import type { HackerNewsSearchOptions, HackerNewsSearchResult } from "./types.js";
 import { validateSearchResult } from "./validate.js";
 
 export * from "./search.js";
@@ -50,46 +46,4 @@ function getEndpoint(sort: "date" | "relevance"): string {
     default:
       throw new Error(`Unknown sort: ${sort}`);
   }
-}
-
-type HackerNewsParameter = Omit<HackerNewsSearchOptions, "sort" | "client">;
-
-export function buildQueryString({
-  query,
-  tags,
-  filters,
-  page,
-  hitsPerPage,
-}: HackerNewsParameter): URLSearchParams {
-  const queryString = new URLSearchParams();
-
-  if (query) {
-    queryString.set("query", query);
-  }
-
-  if (tags && tags.length > 0) {
-    queryString.set("tags", buildTagQueryString(tags));
-  }
-
-  if (filters && filters.length > 0) {
-    queryString.set("numericFilters", buildFilterQueryString(filters));
-  }
-
-  if (typeof page === "number" && Number.isInteger(page)) {
-    queryString.set("page", page.toString());
-  }
-
-  if (typeof hitsPerPage === "number" && Number.isInteger(hitsPerPage)) {
-    queryString.set("hitsPerPage", hitsPerPage.toString());
-  }
-
-  return queryString;
-}
-
-export function buildFilterQueryString(filters: HackerNewsFilter[]): string {
-  return filters.map((filter) => filter.join("")).join(",");
-}
-
-export function buildTagQueryString(tags: HackerNewsTag[]): string {
-  return tags.join(",");
 }
