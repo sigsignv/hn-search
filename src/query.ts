@@ -51,7 +51,7 @@ const HackerNewsFilterSchema = v.tuple([
  */
 export function buildQueryFromFilters(filters: HackerNewsFilter[]): string {
   return filters
-    .map((filter) => v.parse(HackerNewsFilterSchema, filter))
+    .map((filter) => v.parse(HackerNewsFilterSchema, filter, { message: "Invalid filter format" }))
     .map((filter) => filter.join(""))
     .join(",");
 }
@@ -64,5 +64,7 @@ export function buildQueryFromFilters(filters: HackerNewsFilter[]): string {
  * @internal
  */
 export function buildQueryFromTags(tags: HackerNewsTag[]): string {
-  return tags.map((tag) => v.parse(HackerNewsTagSchema, tag)).join(",");
+  return tags
+    .map((tag) => v.parse(HackerNewsTagSchema, tag, { message: "Invalid tag format" }))
+    .join(",");
 }
