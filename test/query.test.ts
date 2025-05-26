@@ -2,20 +2,27 @@ import { describe, it } from "vitest";
 import { buildQueryFromFilters, buildQueryFromTags, buildQueryString } from "../src/query.ts";
 
 describe("buildQueryString", () => {
-  it("should build query string with all parameters", ({ expect }) => {
+  it("should return all params when all options are set", ({ expect }) => {
     const params = buildQueryString({
       query: "example",
       tags: ["story", "author_dang"],
       filters: [["points", ">", 100]],
+      page: 2,
       hitsPerPage: 10,
     });
     expect(params.get("query")).toBe("example");
     expect(params.get("tags")).toBe("story,author_dang");
     expect(params.get("numericFilters")).toBe("points>100");
+    expect(params.get("page")).toBe("2");
     expect(params.get("hitsPerPage")).toBe("10");
   });
 
-  it("should build query string with only query", ({ expect }) => {
+  it("should return empty params when no options are set", ({ expect }) => {
+    const params = buildQueryString({});
+    expect(params.size).toBe(0);
+  });
+
+  it("should return query param when only query is set", ({ expect }) => {
     const params = buildQueryString({
       query: "example",
     });
@@ -23,7 +30,7 @@ describe("buildQueryString", () => {
     expect(params.size).toBe(1);
   });
 
-  it("should build query string with only tags", ({ expect }) => {
+  it("should return tags param when only tags are set", ({ expect }) => {
     const params = buildQueryString({
       tags: ["story"],
     });
@@ -31,7 +38,7 @@ describe("buildQueryString", () => {
     expect(params.size).toBe(1);
   });
 
-  it("should build query string with only filters", ({ expect }) => {
+  it("should return numericFilters param when only filters are set", ({ expect }) => {
     const params = buildQueryString({
       filters: [
         ["points", ">", 100],
@@ -42,7 +49,7 @@ describe("buildQueryString", () => {
     expect(params.size).toBe(1);
   });
 
-  it("should build query string with only page", ({ expect }) => {
+  it("should return page param when only page is set", ({ expect }) => {
     const params = buildQueryString({
       page: 2,
     });
@@ -50,7 +57,7 @@ describe("buildQueryString", () => {
     expect(params.size).toBe(1);
   });
 
-  it("should build query string with only hitsPerPage", ({ expect }) => {
+  it("should return hitsPerPage param when only hitsPerPage is set", ({ expect }) => {
     const params = buildQueryString({
       hitsPerPage: 10,
     });
@@ -58,12 +65,7 @@ describe("buildQueryString", () => {
     expect(params.size).toBe(1);
   });
 
-  it("should build empty query string if all parameters are empty", ({ expect }) => {
-    const params = buildQueryString({});
-    expect(params.size).toBe(0);
-  });
-
-  it("should treat empty arrays for tags and filters the same as omitting them", ({ expect }) => {
+  it("should return empty params when tags and filters are empty arrays", ({ expect }) => {
     const params = buildQueryString({
       tags: [],
       filters: [],

@@ -2,38 +2,58 @@ import * as v from "valibot";
 import type { HackerNewsFilter, HackerNewsSearchOptions, HackerNewsTag } from "./types.js";
 import { HackerNewsTagSchema } from "./validate.js";
 
-type HackerNewsParameter = Omit<HackerNewsSearchOptions, "sort" | "client">;
+type SearchParams = Omit<HackerNewsSearchOptions, "sort" | "client">;
 
-export function buildQueryString({
-  query,
-  tags,
-  filters,
-  page,
-  hitsPerPage,
-}: HackerNewsParameter): URLSearchParams {
-  const queryString = new URLSearchParams();
+const PositiveIntegerSchema = v.pipe(
+  v.number(),
+  v.integer(),
+  v.minValue(0),
+  v.transform((n) => n.toString()),
+);
 
-  if (query) {
-    queryString.set("query", query);
+/**
+ * Builds a URLSearchParams object from the given search parameters.
+ *
+ * @param params The search parameters to convert.
+ * @returns The URLSearchParams object for the query.
+ * @internal
+ */
+export function buildQueryString(params: SearchParams): URLSearchParams {
+  const query = new URLSearchParams();
+
+  if (params.query) {
+    query.set("query", params.query);
   }
 
-  if (tags && tags.length > 0) {
-    queryString.set("tags", buildQueryFromTags(tags));
+  if (params.tags) {
+    const tags = buildQueryFromTags(params.tags);
+    if (tags !== "") {
+      query.set("tags", tags);
+    }
   }
 
-  if (filters && filters.length > 0) {
-    queryString.set("numericFilters", buildQueryFromFilters(filters));
+  if (params.filters) {
+    const filters = buildQueryFromFilters(params.filters);
+    if (filters !== "") {
+      query.set("numericFilters", filters);
+    }
   }
 
-  if (typeof page === "number" && Number.isInteger(page)) {
-    queryString.set("page", page.toString());
+  if (params.page) {
+    const page = v.parse(PositiveIntegerSchema, params.page, {
+      message: "Invalid page number",
+    });
+    query.set("page", page);
   }
 
-  if (typeof hitsPerPage === "number" && Number.isInteger(hitsPerPage)) {
-    queryString.set("hitsPerPage", hitsPerPage.toString());
+  if (params.hitsPerPage) {
+    const hitsPerPage = v.parse(PositiveIntegerSchema, params.hitsPerPage, {
+      message: "Invalid hitsPerPage number",
+    });
+    query.set("hitsPerPage", hitsPerPage);
   }
 
-  return queryString;
+  return query;
 }
 
 const HackerNewsFilterSchema = v.tuple([
