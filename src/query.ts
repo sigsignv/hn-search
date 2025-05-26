@@ -1,6 +1,40 @@
 import * as v from "valibot";
-import type { HackerNewsFilter, HackerNewsTag } from "./types.js";
+import type { HackerNewsFilter, HackerNewsSearchOptions, HackerNewsTag } from "./types.js";
 import { HackerNewsTagSchema } from "./validate.js";
+
+type HackerNewsParameter = Omit<HackerNewsSearchOptions, "sort" | "client">;
+
+export function buildQueryString({
+  query,
+  tags,
+  filters,
+  page,
+  hitsPerPage,
+}: HackerNewsParameter): URLSearchParams {
+  const queryString = new URLSearchParams();
+
+  if (query) {
+    queryString.set("query", query);
+  }
+
+  if (tags && tags.length > 0) {
+    queryString.set("tags", buildQueryFromTags(tags));
+  }
+
+  if (filters && filters.length > 0) {
+    queryString.set("numericFilters", buildQueryFromFilters(filters));
+  }
+
+  if (typeof page === "number" && Number.isInteger(page)) {
+    queryString.set("page", page.toString());
+  }
+
+  if (typeof hitsPerPage === "number" && Number.isInteger(hitsPerPage)) {
+    queryString.set("hitsPerPage", hitsPerPage.toString());
+  }
+
+  return queryString;
+}
 
 const HackerNewsFilterSchema = v.tuple([
   v.picklist(["created_at_i", "points", "num_comments"]),
