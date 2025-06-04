@@ -15,7 +15,7 @@ export type {
 } from "./types.js";
 
 export async function hnSearch(options: HackerNewsSearchOptions): Promise<HackerNewsSearchResult> {
-  const { client = fetch, sort = "relevance", ...parameters } = options;
+  const { client = fetch, sort = "relevance", signal, ...parameters } = options;
 
   const url = new URL(getEndpoint(sort));
   for (const [key, value] of buildQueryString(parameters)) {
@@ -26,6 +26,7 @@ export async function hnSearch(options: HackerNewsSearchOptions): Promise<Hacker
     headers: {
       "User-Agent": "@sigsign/hn-search",
     },
+    signal: signal ?? null,
   });
 
   if (!response.ok) {

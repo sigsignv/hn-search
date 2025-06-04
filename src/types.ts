@@ -7,6 +7,8 @@ export type HackerNewsSearchOptions = {
 
   sort?: "date" | "relevance";
 
+  signal?: AbortSignal;
+
   client?: HttpClient;
 };
 
