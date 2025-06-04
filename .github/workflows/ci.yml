@@ -42,4 +42,5 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install
-      - run: node --run test
+      # Note: 'node --run' is not supported in Node 20 or earlier.
+      - run: npm run test
