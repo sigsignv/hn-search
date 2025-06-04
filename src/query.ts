@@ -2,7 +2,7 @@ import * as v from "valibot";
 import type { HackerNewsFilter, HackerNewsSearchOptions, HackerNewsTag } from "./types.js";
 import { HackerNewsTagSchema } from "./validate.js";
 
-type SearchParams = Omit<HackerNewsSearchOptions, "sort" | "client">;
+type SearchParams = Omit<HackerNewsSearchOptions, "sort" | "client" | "signal">;
 
 const PositiveIntegerSchema = v.pipe(
   v.number(),
