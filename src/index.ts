@@ -2,8 +2,6 @@ import { buildQueryString } from "./query.js";
 import type { HackerNewsSearchOptions, HackerNewsSearchResult } from "./types.js";
 import { validateSearchResult } from "./validate.js";
 
-export * from "./search.js";
-
 export type {
   HackerNewsSearchResult,
   HackerNewsStory,
