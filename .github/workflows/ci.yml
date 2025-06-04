@@ -4,9 +4,13 @@ name: Tests
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+      - dev
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
+      - dev
 
 jobs:
   check-types:
@@ -15,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
       - run: npm install
       - run: node --run check:types
 
@@ -30,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [ 18, 20, 22 ]
+        node-version: [ 20, 22, 24 ]
     name: Tests with Node ${{ matrix.node-version }}
     steps:
       - uses: actions/checkout@v4
@@ -38,5 +42,5 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install
-      # Note: 'node --run' is not supported in Node 20 or earlier.
+      # Note: 'node --run' is only supported in Node 22 or later.
       - run: npm run test
